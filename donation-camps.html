@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Active Donation Camps Network – RaktSetu</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"/>
+  
+  <style>
+    :root {
+      --primary-maroon: #8a1527;
+      --primary-dark: #660f1c;
+      --accent-red: #ef4444;
+      --bg-light: #f8fafc;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    body { background-color: var(--bg-light); color: var(--text-dark); overflow-x: hidden; }
+
+    /* --- INSTITUTIONAL BRAND HEADER --- */
+    .gov-header {
+      background: #ffffff;
+      padding: 12px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .gov-branding { display: flex; align-items: center; gap: 20px; }
+    .brand-divider { width: 1px; height: 35px; background: var(--border-color); }
+    
+    .raktsetu-identity { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--primary-maroon); }
+    .raktsetu-identity .logo-icon { font-size: 1.6rem; }
+    .raktsetu-identity .logo-text { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5rem; letter-spacing: -0.5px; }
+
+    /* --- NEW UPDATES TICKER NAVIGATION BAR --- */
+    .ticker-navbar {
+      background: #1e293b;
+      color: #ffffff;
+      padding: 10px 5%;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      font-size: 0.9rem;
+      border-bottom: 3px solid var(--accent-red);
+    }
+    .ticker-label {
+      background: var(--accent-red);
+      color: #ffffff;
+      padding: 4px 10px;
+      font-weight: 700;
+      border-radius: 4px;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      white-space: nowrap;
+      letter-spacing: 0.5px;
+    }
+    .ticker-content-wrapper {
+      overflow: hidden;
+      width: 100%;
+    }
+    .ticker-marquee {
+      display: inline-block;
+      white-space: nowrap;
+      padding-left: 100%;
+      animation: marqueeRunningEffect 25s linear infinite;
+    }
+    .ticker-marquee:hover {
+      animation-play-state: paused;
+    }
+    .ticker-item {
+      display: inline-block;
+      margin-right: 50px;
+      color: #cbd5e1;
+    }
+    .ticker-item strong { color: #fca5a5; }
+
+    @keyframes marqueeRunningEffect {
+      0% { transform: translate3d(0, 0, 0); }
+      100% { transform: translate3d(-100%, 0, 0); }
+    }
+
+    /* --- MAIN AREA WORKSPACE --- */
+    .section-container {
+      max-width: 1400px;
+      margin: 40px auto;
+      padding: 0 5%;
+    }
+
+    .section-header {
+      margin-bottom: 32px;
+      border-left: 4px solid var(--primary-maroon);
+      padding-left: 16px;
+    }
+
+    .section-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      color: var(--primary-maroon);
+      font-size: 2rem;
+    }
+    .section-header p {
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-size: 1rem;
+    }
+
+    /* --- TOP 10 CAMPS CARDS GRID --- */
+    .camps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 28px;
+    }
+
+    .camp-card {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-top: 4px solid var(--primary-maroon);
+      position: relative;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .camp-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 20px -8px rgba(0,0,0,0.1);
+    }
+
+    .camp-index-badge {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      background: #f1f5f9;
+      color: var(--text-dark);
+      font-size: 0.8rem;
+      font-weight: 700;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-color);
+    }
+
+    .camp-org {
+      font-size: 0.75rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .camp-name {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--primary-maroon);
+      margin-bottom: 16px;
+      padding-right: 24px;
+    }
+
+    .camp-details {
+      border-top: 1px dashed var(--border-color);
+      padding-top: 14px;
+      margin-bottom: 16px;
+    }
+
+    .camp-meta-line {
+      font-size: 0.9rem;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .camp-meta-line .icon {
+      font-size: 1.1rem;
+      width: 20px;
+    }
+
+    .btn-register-camp {
+      background: var(--primary-maroon);
+      color: #ffffff;
+      border: none;
+      padding: 12px;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      text-align: center;
+      cursor: pointer;
+      transition: background 0.2s;
+      font-size: 0.95rem;
+      width: 100%;
+    }
+
+    .btn-register-camp:hover {
+      background: var(--primary-dark);
+    }
+
+    .footer {
+      background: #1e293b;
+      color: #94a3b8;
+      text-align: center;
+      padding: 32px;
+      margin-top: 80px;
+      font-size: 0.9rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="gov-header">
+    <div class="gov-branding">
+      <div style="font-size: 0.75rem; font-weight: 700; line-height: 1.2; color:#334155;">MINISTRY OF<br>HEALTH AND FAMILY WELFARE</div>
+      <div class="brand-divider"></div>
+      <a href="index.html" class="raktsetu-identity">
+        <span class="logo-icon">🩸</span>
+        <span class="logo-text">RaktSetu</span>
+      </a>
+    </div>
+  </div>
+
+  <div class="ticker-navbar">
+    <div class="ticker-label">New Updates</div>
+    <div class="ticker-content-wrapper">
+      <div class="ticker-marquee">
+        <span class="ticker-item">📢 <strong>Update:</strong> Emergency Donation Camp scheduled at <strong>SV University, Tirupati</strong> on July 05. Special O-ve buffer needed.</span>
+        <span class="ticker-item">🔄 <strong>Live Feed:</strong> Nellore Corporate Plaza Drive registration slots filled up to 85%. Book soon!</span>
+        <span class="ticker-item">⭐ <strong>Milestone:</strong> Over 1,200 units processed this week through verified voluntary campus arrays.</span>
+        <span class="ticker-item">🚨 <strong>Alert:</strong> Flash donation camp setup approved at Chittoor Central Block for immediate trauma supply management.</span>
+      </div>
+    </div>
+  </div>
+
+  <main class="section-container">
+    
+    <div class="section-header">
+      <h2>Top 10 Active Donation Camps</h2>
+      <p>Secure an appointment token at verified institutional healthcare staging hubs nearby.</p>
+    </div>
+
+    <div class="camps-grid">
+      
+      <div class="camp-card">
+        <div class="camp-index-badge">#1</div>
+        <div>
+          <div class="camp-org">Red Cross India Node</div>
+          <div class="camp-name">Apex Regional Donation Drive</div>
+        </div>
+        <div>
+          <div class="camp-details">
+            <div class="camp-meta-line"><span class="icon">📅</span> <span>July 05, 2026 (09:00 AM - 04:00 PM)</span></div>
+            <div class="camp-meta-line"><span class="icon">📍</span> <span>SV University Ground Campus, Tirupati</span></div>
+          </div>
+          <button class="btn-register-camp" onclick="confirmCampRegistration('Apex Regional Drive')">Book Appointment Slot</button>
+        </div>
+      </div>
+
+      <div class="camp-card">
+        <div class="camp-index-badge">#2</div>
+        <div>
+          <div class="camp-org">District Public Health Unit</div>
+          <div class="camp-name">Nellore Corporate Tech Plaza Camp</div>
+        </div>
+        <div>
+          <div class="camp-details">
+            <div class="camp-meta-line"><span class="icon">📅</span> <span>July 12, 2026 (10:00 AM - 05:00 PM)</span></div>
+            <div class="camp-meta-line"><span class="icon">📍</span> <span>Industrial Core Plaza Main Hall, Nellore</span></div>
+          </div>
+          <button class="btn-register-camp" onclick="confirmCampRegistration('Nellore Corporate Tech Plaza Camp')">Book Appointment Slot</button>
+        </div>
+      </div>
+
+      <div class="camp-card">
+        <div class="camp-index-badge">#3</div>
+        <div>
+          <div class="camp-org">Rotary Club International</div>
+          <div class="camp-name">Youth Lifesavers Camp Session</div>
+        </div>
+        <div>
+          <div class="camp-details">
+            <div class="camp-meta-line"><span class="icon">📅</span> <span>July 18, 2026 (08:30 AM - 02:00 PM)</span></div>
+            <div class="camp-meta-line"><span class="icon">📍</span> <span>Government Junior College Complex, Chittoor</span></div>
+          </div>
+          <button class="btn-register-camp" onclick="confirmCampRegistration('Youth Lifesavers Camp Session')">Book Appointment Slot</button>
+        </div>
+      </div>
+
+      <div class="camp-card">
+        <div class="camp-index-badge">#4</div>
+        <div>
+          <div class="camp-org">RaktSetu Logistics Network</div>
+          <div class="camp-name">Trauma Supply Emergency Buffer Drive</div>
+        </div>
+        <div>
+          <div class="camp-details">
+            <div class="camp-meta-line"><span class="icon">📅</span> <span>July 22, 2026 (09:00 AM - 06:00 PM)</span></div>
+            <div class="camp-meta-line"><span class="icon">📍</span> <span>Community Medical Base Hub, Kadapa</span></div>
+          </div>
+          <button class="btn-register-camp" onclick="confirmCampRegistration('Trauma Supply Emergency Buffer Drive')">Book Appointment Slot</button>
+        </div>
+      </div>
+
+      <div class="camp-card">
+        <div class="camp-index-badge">#5</div>
+        <div>
+          <div class="camp-org">State Medical University</div>
+          <div class="camp-name">Voluntary Mega Student Camp Matrix</div>
+        </div>
+        <div>
+          <div class="camp-details">
+            <div class="camp-meta-line"><span class="icon">📅</span> <span>July 29, 2026 (09:00 AM - 03:30 PM)</span></div>
+            <div class="camp-meta-line"><span class="icon">📍</span> <span>Auditorium Central Block, Vijayawada</span></div>
+          </div>
+          <button class="btn-register-camp" onclick="confirmCampRegistration('Voluntary Mega Student Camp Matrix')">Book Appointment Slot</button>
+        </div>
+      </div>
+
+      <div class="camp-card">
+        <div class="camp-index-badge">#6</div>
+        <div>
+          <div class="camp-org">NSS Volunteer Base</div>
+          <div class="camp-name">Independence Fortnight Prelude Drive</div>
+        </div>
+        <div>
+          <div class="camp-details">
+            <div class="camp-meta-line"><span class="icon">📅</span> <span>August 02, 2026 (08:00 AM - 01:00 PM)</span></div>
+            <div class="camp-meta-line"><span class="icon">📍</span> <span>Town Hall Community Center, Guntur</span></div>
+          </div>
+          <button class="btn-register-camp" onclick="confirmCampRegistration('Independence Fortnight Prelude Drive')">Book Appointment Slot</button>
+        </div>
+      </div>
+
+      <div class="camp-card">
+        <div class="camp-index-badge">#7</div>
+        <div>
+          <div class="camp-org">City Lions Club Unit</div>
+          <div class="camp-name">Citizen Responder Supply Camp</div>
+        </div>
+        <div>
+          <div class="camp-details">
+            <div class="camp-meta-line"><span class="icon">📅</span> <span>August 07, 2026 (09:30 AM - 04:30 PM)</span></div>
+            <div class="camp-meta-line"><span class="icon">📍</span> <span>Public Library Exhibition Wing, Ongole</span></div>
+          </div>
+          <button class="btn-register-camp" onclick="confirmCampRegistration('Citizen Responder Supply Camp')">Book Appointment Slot</button>
+        </div>
+      </div>
+
+      <div class="camp-card">
+        <div class="camp-index-badge">#8</div>
+        <div>
+          <div class="camp-org">Police Welfare Association</div>
+          <div class="camp-name">Civic Guardians Voluntary Drive</div>
+        </div>
+        <div>
+          <div class="camp-details">
+            <div class="camp-meta-line"><span class="icon">📅</span> <span>August 14, 2026 (09:00 AM - 05:00 PM)</span></div>
+            <div class="camp-meta-line"><span class="icon">📍</span> <span>District Armed Reserve Grounds, Kurnool</span></div>
+          </div>
+          <button class="btn-register-camp" onclick="confirmCampRegistration('Civic Guardians Voluntary Drive')">Book Appointment Slot</button>
+        </div>
+      </div>
+
+      <div class="camp-card">
+        <div class="camp-index-badge">#9</div>
+        <div>
+          <div class="camp-org">Railway Employee Board</div>
+          <div class="camp-name">Transit Infrastructure Support Camp</div>
+        </div>
+        <div>
+          <div class="camp-details">
+            <div class="camp-meta-line"><span class="icon">📅</span> <span>August 20, 2026 (10:00 AM - 04:00 PM)</span></div>
+            <div class="camp-meta-line"><span class="icon">📍</span> <span>Railway Divisional Hospital, Anantapur</span></div>
+          </div>
+          <button class="btn-register-camp" onclick="confirmCampRegistration('Transit Infrastructure Support Camp')">Book Appointment Slot</button>
+        </div>
+      </div>
+
+      <div class="camp-card">
+        <div class="camp-index-badge">#10</div>
+        <div>
+          <div class="camp-org">Sree Venkateswara Charity Trust</div>
+          <div class="camp-name">Pilgrim Logistics Safety Drive</div>
+        </div>
+        <div>
+          <div class="camp-details">
+            <div class="camp-meta-line"><span class="icon">📅</span> <span>August 26, 2026 (08:00 AM - 02:00 PM)</span></div>
+            <div class="camp-meta-line"><span class="icon">📍</span> <span>Pilgrim Amenity Complex-IV, Tirumala</span></div>
+          </div>
+          <button class="btn-register-camp" onclick="confirmCampRegistration('Pilgrim Logistics Safety Drive')">Book Appointment Slot</button>
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <footer class="footer">
+    <p>🩸 RaktSetu National Network Operations — Active Logistical Camp Registry</p>
+  </footer>
+
+  <script>
+    function confirmCampRegistration(campTitleName) {
+      alert(`Success! Your voluntary booking slot for "${campTitleName}" is reserved.\nYour SMS entry ticket voucher has been broadcasted.`);
+    }
+  </script>
+</body>
+</html>

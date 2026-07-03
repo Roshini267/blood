@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Thalassemia Request Portal – RaktSetu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"/>
+  
+  <style>
+    :root {
+      --primary-maroon: #8a1527;
+      --primary-dark: #660f1c;
+      --accent-red: #ef4444;
+      --bg-light: #f8fafc;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* --- INSTITUTIONAL TOP BAR --- */
+    .gov-header {
+      background: #ffffff;
+      padding: 12px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .gov-branding {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .brand-divider {
+      width: 1px;
+      height: 35px;
+      background: var(--border-color);
+    }
+
+    .raktsetu-identity {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--primary-maroon);
+    }
+
+    .raktsetu-identity .logo-icon { font-size: 1.8rem; }
+    .raktsetu-identity .logo-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: -0.5px;
+    }
+
+    .btn-back {
+      color: var(--text-dark);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .btn-back:hover { color: var(--primary-maroon); }
+
+    /* --- LAYOUT CENTRALIZED CONTEXT --- */
+    .form-container {
+      flex: 1;
+      max-width: 800px;
+      width: 100%;
+      margin: 40px auto;
+      padding: 0 24px;
+    }
+
+    .form-card {
+      background: #ffffff;
+      padding: 40px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+    }
+
+    .form-title-block {
+      border-bottom: 2px solid #f1f5f9;
+      padding-bottom: 20px;
+      margin-bottom: 28px;
+    }
+
+    .form-title-block h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      color: var(--primary-maroon);
+      font-size: 1.8rem;
+    }
+
+    .form-title-block p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      margin-top: 4px;
+    }
+
+    .form-section-subtitle {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.1rem;
+      color: var(--primary-dark);
+      margin: 24px 0 14px 0;
+      font-weight: 700;
+      border-left: 3px solid var(--accent-red);
+      padding-left: 8px;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .form-group.full-width {
+      grid-column: span 2;
+    }
+
+    .form-group label {
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .form-control {
+      padding: 12px 14px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      outline: none;
+      background: #fafafa;
+      transition: border-color 0.2s, background-color 0.2s;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-maroon);
+      background: #ffffff;
+    }
+
+    .btn-submit-req {
+      background: var(--primary-maroon);
+      color: #ffffff;
+      border: none;
+      padding: 16px 32px;
+      font-size: 1rem;
+      font-weight: 700;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: background 0.2s;
+      width: 100%;
+      margin-top: 12px;
+    }
+
+    .btn-submit-req:hover {
+      background: var(--primary-dark);
+    }
+
+    .info-callout-box {
+      background: #fff1f2;
+      border: 1px solid #ffe4e6;
+      border-radius: var(--radius-md);
+      padding: 16px;
+      margin-bottom: 24px;
+      color: var(--primary-maroon);
+      font-size: 0.85rem;
+      font-weight: 500;
+      line-height: 1.5;
+    }
+
+    .footer {
+      background: #1e293b;
+      color: #94a3b8;
+      text-align: center;
+      padding: 24px;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Branding Strip Header -->
+  <div class="gov-header">
+    <div class="gov-branding">
+      <div style="font-size: 0.75rem; font-weight: 700; line-height: 1.2; color:#334155;">MINISTRY OF<br>HEALTH AND FAMILY WELFARE</div>
+      <div class="brand-divider"></div>
+      <a href="../index.html" class="raktsetu-identity">
+        <span class="logo-icon">🩸</span>
+        <span class="logo-text">RaktSetu</span>
+      </a>
+    </div>
+    <a href="../index.html" class="btn-back">← Back to Dashboard</a>
+  </div>
+
+  <!-- Main Content Body Area -->
+  <div class="form-container">
+    <div class="form-card">
+      <div class="form-title-block">
+        <h2>Thalassemia Blood Request Enrollment</h2>
+        <p>Register systemic cyclic transfusion requests to secure recurring reserve access priorities across the grid network.</p>
+      </div>
+
+      <div class="info-callout-box">
+        📌 <b>Priority Notice:</b> Confirmed thalassemia profiles are granted institutional queue privileges across regional medical cross-docks. Please ensure valid welfare certificates or hospital diagnostic keys are attached below.
+      </div>
+
+      <form onsubmit="handleThalassemiaSubmissionForm(event)">
+        
+        <div class="form-section-subtitle">Patient Identification Metrics</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Patient Full Name</label>
+            <input type="text" class="form-control" placeholder="Enter complete legal name" required/>
+          </div>
+          <div class="form-group">
+            <label>Welfare ID / Unique Health Number</label>
+            <input type="text" class="form-control" placeholder="e.g. UHID-908234" required/>
+          </div>
+          <div class="form-group">
+            <label>Required Blood Group</label>
+            <select class="form-control" required>
+              <option value="">Select Group</option>
+              <option>O-</option><option>O+</option>
+              <option>A-</option><option>A+</option>
+              <option>B-</option><option>B+</option>
+              <option>AB-</option><option>AB+</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Age (Years)</label>
+            <input type="number" class="form-control" min="0" max="120" required/>
+          </div>
+        </div>
+
+        <div class="form-section-subtitle">Transfusion Schedule Demands</div>
+        <div class="form-grid">
+          <div class="form-group">
+            <label>Target Hospital / Transfusion Facility Center</label>
+            <input type="text" class="form-control" placeholder="e.g. Tirupati Apex Medical Base" required/>
+          </div>
+          <div class="form-group">
+            <label>Transfusion Cycle Interval Frequency</label>
+            <select class="form-control" required>
+              <option value="">Select Interval</option>
+              <option>Every 14 Days (Bi-weekly)</option>
+              <option>Every 21 Days (3 Weeks)</option>
+              <option>Monthly Schedule</option>
+              <option>On-demand Emergency Routine</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Next Scheduled Transfusion Target Date</label>
+            <input type="date" class="form-control" required/>
+          </div>
+          <div class="form-group">
+            <label>Units Required per Cycle Session</label>
+            <input type="number" class="form-control" min="1" max="5" value="1" required/>
+          </div>
+        </div>
+
+        <button type="submit" class="btn-submit-req">Broadcast Recurring Request Profile</button>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>🩸 RaktSetu Healthcare Automation Services Network</p>
+  </footer>
+
+  <script>
+    function handleThalassemiaSubmissionForm(e) {
+      e.preventDefault();
+      alert("Verification Pending: Your Thalassemia medical allocation schedule request profile has been mapped to the processing registry grid successfully.");
+      window.location.href = "../index.html";
+    }
+  </script>
+</body>
+</html>

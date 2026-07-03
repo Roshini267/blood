@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blood Center Directory – RaktSetu</title>
+  
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"/>
+  
+  <style>
+    :root {
+      --primary-maroon: #8a1527;
+      --primary-dark: #660f1c;
+      --accent-red: #ef4444;
+      --bg-light: #f8fafc;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+    body { background-color: var(--bg-light); color: var(--text-dark); }
+
+    /* --- INSTITUTIONAL TOP BAR --- */
+    .gov-header {
+      background: #ffffff;
+      padding: 12px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+    .gov-branding { display: flex; align-items: center; gap: 20px; }
+    .brand-divider { width: 1px; height: 35px; background: var(--border-color); }
+    .raktsetu-identity { display: flex; align-items: center; gap: 8px; text-decoration: none; color: var(--primary-maroon); }
+    .raktsetu-identity .logo-icon { font-size: 1.8rem; }
+    .raktsetu-identity .logo-text { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 1.5rem; letter-spacing: -0.5px; }
+
+    /* --- MAROON NAVIGATION NAVBAR --- */
+    .navbar-container { background: var(--primary-maroon); box-shadow: var(--shadow); }
+    .navbar { max-width: 1400px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; }
+    .nav-links { display: flex; list-style: none; }
+    .nav-link { display: flex; align-items: center; gap: 6px; padding: 16px 20px; color: #ffffff; text-decoration: none; font-size: 0.95rem; font-weight: 500; }
+    .nav-link:hover, .nav-link.active { background: var(--primary-dark); }
+    .btn-emergency { background: var(--accent-red); color: white; text-decoration: none; padding: 8px 16px; border-radius: 4px; font-size: 0.9rem; font-weight: 600; }
+
+    /* --- DIRECTORY CONTENT WORKSPACE --- */
+    .main-container { max-width: 1400px; margin: 40px auto; padding: 0 5%; }
+    .page-header-block { margin-bottom: 32px; }
+    .page-header-block h1 { font-family: 'Space Grotesk', sans-serif; color: var(--primary-maroon); font-size: 2.2rem; }
+    .page-header-block p { color: var(--text-muted); margin-top: 4px; }
+
+    /* Filter Tools Layout */
+    .filter-panel {
+      background: white;
+      padding: 24px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 32px;
+    }
+    .filter-select, .search-control {
+      padding: 12px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      outline: none;
+      min-width: 200px;
+    }
+    .search-control { flex: 1; }
+
+    /* Center Directory Cards Grid */
+    .directory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 24px;
+    }
+    .center-card {
+      background: white;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      border-left: 5px solid var(--primary-maroon);
+    }
+    .center-name { font-family: 'Space Grotesk', sans-serif; font-size: 1.25rem; font-weight: 700; color: var(--primary-maroon); margin-bottom: 12px; }
+    .center-meta { font-size: 0.9rem; margin-bottom: 8px; color: var(--text-dark); display: flex; align-items: flex-start; gap: 8px; }
+    .center-meta span.icon { color: var(--primary-maroon); font-weight: bold; }
+    
+    .status-pill { display: inline-block; padding: 4px 10px; font-size: 0.75rem; font-weight: 700; border-radius: 12px; margin-top: 12px; text-transform: uppercase; }
+    .status-pill.gov { background: #e0f2fe; color: #0369a1; }
+    .status-pill.pvt { background: #fef3c7; color: #b45309; }
+
+    .footer { background: #1e293b; color: #94a3b8; text-align: center; padding: 32px; margin-top: 80px; font-size: 0.9rem; }
+  </style>
+</head>
+<body>
+
+  <!-- Top Ribbon Layer -->
+  <div class="gov-header">
+    <div class="gov-branding">
+      <div style="font-size: 0.8rem; font-weight: 700; line-height: 1.2; color:#334155;">MINISTRY OF<br>HEALTH AND FAMILY WELFARE</div>
+      <div class="brand-divider"></div>
+      <a href="../index.html" class="raktsetu-identity">
+        <span class="logo-icon">🩸</span>
+        <span class="logo-text">RaktSetu</span>
+      </a>
+    </div>
+  </div>
+
+  <!-- Persistent Menu Strip -->
+  <div class="navbar-container">
+    <nav class="navbar">
+      <ul class="nav-links">
+        <li><a href="../index.html" class="nav-link">Dashboard</a></li>
+        <li><a href="bloodbank.html" class="nav-link active">Blood Center Directory</a></li>
+        <li><a href="donors.html" class="nav-link">Donors</a></li>
+        <li><a href="emergency.html" class="nav-link">Emergency</a></li>
+        <li><a href="leaderboard.html" class="nav-link">LifeSaver Board</a></li>
+      </ul>
+      <div class="nav-emergency"><a href="emergency.html" class="btn-emergency">🚨 Emergency Request</a></div>
+    </nav>
+  </div>
+
+  <!-- Core Body Segment -->
+  <main class="main-container">
+    <div class="page-header-block">
+      <h1>Verified Blood Center Directory</h1>
+      <p>Search, filter, and track regional medical depots across state nodes.</p>
+    </div>
+
+    <!-- Filter Control Board -->
+    <div class="filter-panel">
+      <select id="stateSelect" class="filter-select" onchange="updateCitiesAndFilter()">
+        <option value="">All States</option>
+        <option value="Andhra Pradesh">Andhra Pradesh</option>
+        <option value="Delhi">Delhi NT</option>
+        <option value="Maharashtra">Maharashtra</option>
+        <option value="Tamil Nadu">Tamil Nadu</option>
+      </select>
+
+      <select id="citySelect" class="filter-select" onchange="applyDirectoryFilters()" disabled>
+        <option value="">Select State First</option>
+      </select>
+
+      <input type="text" id="directorySearchInput" class="search-control" oninput="applyDirectoryFilters()" placeholder="🔍 Type keywords to find a facility directly..."/>
+    </div>
+
+    <!-- Directory Cards Grid Area -->
+    <div class="directory-grid" id="directoryGridBlock"></div>
+  </main>
+
+  <footer class="footer"><p>🩸 RaktSetu National Logistics Network Inventory Directory</p></footer>
+
+  <script>
+    // Mapped Geographical and Facility Datasets
+    const GEOGRAPHY_MAP = {
+      "Andhra Pradesh": ["Tirupati", "Nellore", "Vijayawada", "Visakhapatnam"],
+      "Delhi": ["New Delhi", "Dwarka"],
+      "Maharashtra": ["Mumbai", "Pune"],
+      "Tamil Nadu": ["Chennai", "Coimbatore"]
+    };
+
+    const DIRECTORY_DATA = [
+      { name: "Tirupati Red Cross Medical Base", state: "Andhra Pradesh", city: "Tirupati", type: "Government", phone: "+91 877 225 4321", address: "SV University Sector, Tirupati" },
+      { name: "Sri Venkateswara Ruia Blood Center", state: "Andhra Pradesh", city: "Tirupati", type: "Government", phone: "+91 877 228 6657", address: "Ruia Hospital Road, Tirupati" },
+      { name: "Nellore District Core Depot", state: "Andhra Pradesh", city: "Nellore", type: "Government", phone: "+91 861 234 1102", address: "Podalakur Road Facility, Nellore" },
+      { name: "Apex Trauma Care Blood Bank", state: "Delhi", city: "New Delhi", type: "Government", phone: "+91 11 2658 8500", address: "AIIMS Campus, New Delhi" },
+      { name: "Dwarka Charitable Trust Depot", state: "Delhi", city: "Dwarka", type: "Private", phone: "+91 11 4556 7890", address: "Sector 12 Market Complex, Dwarka" },
+      { name: "Mumbai Central Cross-Dock Unit", state: "Maharashtra", city: "Mumbai", type: "Private", phone: "+91 22 2308 1411", address: "Byculla Station Road, Mumbai" },
+      { name: "Pune General Civil Hospital Bank", state: "Maharashtra", city: "Pune", type: "Government", phone: "+91 20 2612 2432", address: "Sassoon Road Node, Pune" },
+      { name: "Chennai Voluntary Donor Base", state: "Tamil Nadu", city: "Chennai", type: "Government", phone: "+91 44 2819 4480", address: "Egmore Hub, Chennai" }
+    ];
+
+    // Dependent Dropdown Synchronizer
+    function updateCitiesAndFilter() {
+      const state = document.getElementById('stateSelect').value;
+      const cityMenu = document.getElementById('citySelect');
+      
+      cityMenu.innerHTML = '';
+      if (!state) {
+        cityMenu.innerHTML = '<option value="">Select State First</option>';
+        cityMenu.disabled = true;
+      } else {
+        cityMenu.disabled = false;
+        cityMenu.innerHTML = '<option value="">All Cities</option>';
+        (GEOGRAPHY_MAP[state] || []).forEach(city => {
+          let opt = document.createElement('option');
+          opt.value = city; opt.textContent = city;
+          cityMenu.appendChild(opt);
+        });
+      }
+      applyDirectoryFilters();
+    }
+
+    // Dynamic Directory Filtering Matrix Evaluation
+    function applyDirectoryFilters() {
+      const activeState = document.getElementById('stateSelect').value;
+      const activeCity = document.getElementById('citySelect').value;
+      const searchQuery = document.getElementById('directorySearchInput').value.toLowerCase().trim();
+      
+      const grid = document.getElementById('directoryGridBlock');
+      grid.innerHTML = '';
+
+      const matchedRecords = DIRECTORY_DATA.filter(item => {
+        const matchesState = !activeState || item.state === activeState;
+        const matchesCity = !activeCity || item.city === activeCity;
+        const matchesSearch = !searchQuery || 
+                              item.name.toLowerCase().includes(searchQuery) || 
+                              item.address.toLowerCase().includes(searchQuery);
+        return matchesState && matchesCity && matchesSearch;
+      });
+
+      if (matchedRecords.length === 0) {
+        grid.innerHTML = `<div style="grid-column: 1/-1; text-align: center; padding: 40px; color: var(--text-muted);">No verified blood centers tracked matching this choice criteria.</div>`;
+        return;
+      }
+
+      matchedRecords.forEach(center => {
+        grid.innerHTML += `
+          <div class="center-card">
+            <div>
+              <div class="center-name">${center.name}</div>
+              <div class="center-meta"><span class="icon">📍</span><span>${center.address}, ${center.city}, ${center.state}</span></div>
+              <div class="center-meta"><span class="icon">📞</span><span>${center.phone}</span></div>
+            </div>
+            <div>
+              <span class="status-pill ${center.type === 'Government' ? 'gov' : 'pvt'}">${center.type}</span>
+            </div>
+          </div>
+        `;
+      });
+    }
+
+    // Trigger grid render on first page initialization context
+    document.addEventListener('DOMContentLoaded', applyDirectoryFilters);
+  </script>
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Portal Registration – RaktSetu</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"/>
+  <style>
+    .reg-container {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 0 20px;
+    }
+    .role-selector {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 32px;
+      background: var(--gray-100);
+      padding: 6px;
+      border-radius: var(--radius);
+    }
+    .role-btn {
+      flex: 1;
+      padding: 12px;
+      font-size: 15px;
+      font-weight: 600;
+      background: transparent;
+      color: var(--gray-600);
+      border-radius: 8px;
+      border: none;
+      transition: all 0.2s ease;
+    }
+    .role-btn.active {
+      background: var(--white);
+      color: var(--red);
+      box-shadow: var(--shadow);
+    }
+    .form-card {
+      background: var(--white);
+      border-radius: var(--radius-lg);
+      padding: 36px;
+      border: 1px solid var(--gray-200);
+      box-shadow: var(--shadow);
+      display: none;
+    }
+    .form-card.active {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .form-header {
+      margin-bottom: 8px;
+      border-bottom: 1px solid var(--gray-100);
+      padding-bottom: 16px;
+    }
+    .form-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 24px;
+      color: var(--gray-900);
+    }
+    .form-header p {
+      color: var(--gray-400);
+      font-size: 14px;
+      margin-top: 4px;
+    }
+    .notification-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--gray-900);
+      color: white;
+      padding: 14px 24px;
+      border-radius: 12px;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+      font-size: 0.95rem;
+      font-weight: 500;
+      z-index: 1000;
+      animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-brand">
+    <a href="../index.html" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:8px">
+      <span class="brand-drop">🩸</span><span class="brand-name">RaktSetu</span>
+    </a>
+  </div>
+  <ul class="nav-links">
+    <li><a href="../index.html">Dashboard</a></li>
+    <li><a href="bloodbank.html">Blood Banks</a></li>
+    <li><a href="donors.html">Donors</a></li>
+    <li><a href="emergency.html">Emergency</a></li>
+    <li><a href="leaderboard.html">LifeSaver Board</a></li>
+  </ul>
+  <div class="nav-emergency"><a href="emergency.html" class="btn-emergency">🚨 Emergency Request</a></div>
+</nav>
+
+<div class="reg-container">
+  
+  <div style="text-align: center; margin-bottom: 32px; margin-top: 20px;">
+    <h1 style="font-family:'Space Grotesk', sans-serif; font-size: 2.2rem; margin-bottom: 8px;">Join the National Grid</h1>
+    <p style="color: var(--gray-600);">Select your operational workspace status role to register on RaktSetu</p>
+  </div>
+
+  <!-- Role Selection Navigation Bar -->
+  <div class="role-selector">
+    <button class="role-btn active" onclick="switchRole('donor')">🙋‍♂️ Volunteer Donor</button>
+    <button class="role-btn" onclick="switchRole('center')">🏦 Blood Center Hub</button>
+    <button class="role-btn" onclick="switchRole('hospital')">🏥 Medical Facility</button>
+  </div>
+
+  <!-- 1. DONOR REGISTRATION -->
+  <div id="donorForm" class="form-card active">
+    <div class="form-header">
+      <h2>Volunteer Donor Registry</h2>
+      <p>Register to receive automated geolocation-based emergency dispatch loops.</p>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Full Name</label>
+        <input type="text" id="regDonorName" class="form-input" placeholder="e.g. Rahul Verma"/>
+      </div>
+      <div class="form-group">
+        <label>Blood Group</label>
+        <select id="regDonorGroup" class="form-input">
+          <option value="">Select Group</option>
+          <option value="A+">A+</option><option value="A-">A-</option>
+          <option value="B+">B+</option><option value="B-">B-</option>
+          <option value="AB+">AB+</option><option value="AB-">AB-</option>
+          <option value="O+">O+</option><option value="O-">O- (Universal)</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Contact Phone Number</label>
+        <input type="tel" id="regDonorPhone" class="form-input" placeholder="+91-XXXXXXXXXX"/>
+      </div>
+      <div class="form-group">
+        <label>Target Language Pref (IVR)</label>
+        <select id="regDonorLang" class="form-input">
+          <option value="English">English</option>
+          <option value="Hindi">Hindi</option>
+          <option value="Telugu">Telugu</option>
+          <option value="Tamil">Tamil</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Current Operating City</label>
+      <input type="text" id="regDonorCity" class="form-input" placeholder="e.g. Tirupati"/>
+    </div>
+    <button class="btn-search" style="margin-top: 12px;" onclick="handleDonorSubmit()">🩸 Register as Live Volunteer</button>
+  </div>
+
+  <!-- 2. BLOOD CENTER REGISTRATION -->
+  <div id="centerForm" class="form-card">
+    <div class="form-header">
+      <h2>Blood Bank Center Registration</h2>
+      <p>Provision data ingest metrics to push inventory updates live to the national dashboard.</p>
+    </div>
+    <div class="form-group">
+      <label>Facility Entity Name</label>
+      <input type="text" id="regCenterName" class="form-input" placeholder="e.g. Red Cross Logistics Hub"/>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Authorized License/Reg ID</label>
+        <input type="text" id="regCenterLicense" class="form-input" placeholder="e.g. BB-99201-AP"/>
+      </div>
+      <div class="form-group">
+        <label>Facility Contact Phone</label>
+        <input type="tel" id="regCenterPhone" class="form-input" placeholder="0877-XXXXXXX"/>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>Operational Hub City Location</label>
+      <input type="text" id="regCenterCity" class="form-input" placeholder="e.g. Chennai"/>
+    </div>
+    <button class="btn-search" style="margin-top: 12px; background: var(--primary);" onclick="handleCenterSubmit()">🏦 Initialize Logistics Node</button>
+  </div>
+
+  <!-- 3. HOSPITAL REGISTRATION -->
+  <div id="hospitalForm" class="form-card">
+    <div class="form-header">
+      <h2>Hospital Facility Access Portal</h2>
+      <p>Authorize medical facilities to generate dynamic driving routes and broadcast emergency alarms.</p>
+    </div>
+    <div class="form-group">
+      <label>Hospital Institution Name</label>
+      <input type="text" id="regHospitalName" class="form-input" placeholder="e.g. Apollo Trauma Center"/>
+    </div>
+    <div class="form-row">
+      <div class="form-group">
+        <label>Emergency Desk Phone</label>
+        <input type="tel" id="regHospitalPhone" class="form-input" placeholder="+91-XXXXXXXXXX"/>
+      </div>
+      <div class="form-group">
+        <label>Facility Classification Type</label>
+        <select id="regHospitalType" class="form-input">
+          <option value="Trauma Center">Level 1 Trauma Center</option>
+          <option value="General Hospital">Government General Hospital</option>
+          <option value="Private Clinic">Private Emergency Clinic</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group">
+      <label>City / Regional Cluster Node</label>
+      <input type="text" id="regHospitalCity" class="form-input" placeholder="e.g. Tirupati"/>
+    </div>
+    <button class="btn-search" style="margin-top: 12px; background: var(--gray-900);" onclick="handleHospitalSubmit()">🏥 Authorize Emergency Clearing</button>
+  </div>
+
+</div>
+
+<footer class="footer"><p>🩸 RaktSetu — Secure Multi-Role Operational Registry</p></footer>
+
+<script src="../js/data.js"></script>
+<script>
+  function showToast(message) {
+    const oldToast = document.querySelector('.notification-toast');
+    if (oldToast) oldToast.remove();
+
+    const toast = document.createElement('div');
+    toast.className = 'notification-toast';
+    toast.innerText = message;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 4000);
+  }
+
+  function switchRole(role) {
+    // Reset structural state mappings
+    document.querySelectorAll('.role-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.form-card').forEach(card => card.classList.remove('active'));
+
+    // Activate explicitly queried targeted node states
+    if (role === 'donor') {
+      document.querySelector('.role-selector button:nth-child(1)').classList.add('active');
+      document.getElementById('donorForm').classList.add('active');
+    } else if (role === 'center') {
+      document.querySelector('.role-selector button:nth-child(2)').classList.add('active');
+      document.getElementById('centerForm').classList.add('active');
+    } else if (role === 'hospital') {
+      document.querySelector('.role-selector button:nth-child(3)').classList.add('active');
+      document.getElementById('hospitalForm').classList.add('active');
+    }
+  }
+
+  function handleDonorSubmit() {
+    const name = document.getElementById('regDonorName').value.trim();
+    const group = document.getElementById('regDonorGroup').value;
+    const phone = document.getElementById('regDonorPhone').value.trim();
+    const city = document.getElementById('regDonorCity').value.trim();
+
+    if (!name || !group || !phone || !city) {
+      showToast("⚠️ Missing fields. Volunteer profiling parameters must be absolute.");
+      return;
+    }
+
+    if (typeof DONORS !== 'undefined') {
+      DONORS.push({ id: DONORS.length + 1, name, bloodGroup: group, city, phone, lastDonated: "2020-01-01", available: true });
+    }
+
+    showToast(`🙋‍♂️ Registered successfully! Routing to your live profile metrics...`);
+    setTimeout(() => { window.location.href = "donors.html"; }, 2000);
+  }
+
+  function handleCenterSubmit() {
+    const name = document.getElementById('regCenterName').value.trim();
+    const license = document.getElementById('regCenterLicense').value.trim();
+    const phone = document.getElementById('regCenterPhone').value.trim();
+    const city = document.getElementById('regCenterCity').value.trim();
+
+    if (!name || !license || !phone || !city) {
+      showToast("⚠️ Missing credentials. Facility verification ID metrics required.");
+      return;
+    }
+
+    if (typeof BLOOD_BANKS !== 'undefined') {
+      BLOOD_BANKS.push({
+        id: BLOOD_BANKS.length + 1, name, city, phone,
+        lat: 13.6288 + (Math.random() - 0.5) * 0.1,
+        lng: 79.4192 + (Math.random() - 0.5) * 0.1,
+        stock: { "A+": 0, "A-": 0, "B+": 0, "B-": 0, "AB+": 0, "AB-": 0, "O+": 0, "O-": 0 },
+        lastUpdated: "Just Authorized"
+      });
+    }
+
+    showToast(`🏦 Hub Node Authorized! Launching central stock inventory desk...`);
+    setTimeout(() => { window.location.href = "bloodbank.html"; }, 2000);
+  }
+
+  function handleHospitalSubmit() {
+    const name = document.getElementById('regHospitalName').value.trim();
+    const phone = document.getElementById('regHospitalPhone').value.trim();
+    const city = document.getElementById('regHospitalCity').value.trim();
+
+    if (!name || !phone || !city) {
+      showToast("⚠️ Missing telemetry boundaries. Secure dispatch authorization failed.");
+      return;
+    }
+
+    showToast(`🏥 Medical clearance key verified! Directing to emergency dashboard...`);
+    setTimeout(() => { window.location.href = "../index.html"; }, 2000);
+  }
+</script>
+</body>
+</html>

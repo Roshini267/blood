@@ -1,0 +1,944 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Live National Grid – RaktSetu</title>
+  
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"/>
+  
+  <style>
+    :root {
+      --primary-maroon: #8a1527;
+      --primary-dark: #660f1c;
+      --accent-red: #ef4444;
+      --bg-light: #f8fafc;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+    }
+
+    /* --- INSTITUTIONAL TOP BAR --- */
+    .gov-header {
+      background: #ffffff;
+      padding: 12px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .gov-branding {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .brand-divider {
+      width: 1px;
+      height: 35px;
+      background: var(--border-color);
+    }
+
+    .raktsetu-identity {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--primary-maroon);
+    }
+
+    .raktsetu-identity .logo-icon {
+      font-size: 1.8rem;
+    }
+
+    .raktsetu-identity .logo-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: -0.5px;
+    }
+
+    .lang-toggle {
+      display: flex;
+      gap: 4px;
+    }
+
+    .lang-btn {
+      background: #e2e8f0;
+      border: none;
+      padding: 6px 12px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      border-radius: 4px;
+      cursor: pointer;
+      color: var(--text-dark);
+      transition: all 0.2s;
+    }
+
+    .lang-btn.active {
+      background: var(--primary-maroon);
+      color: white;
+    }
+
+    /* --- MAROON DROPDOWN NAVBAR --- */
+    .navbar-container {
+      background: var(--primary-maroon);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: var(--shadow);
+    }
+
+    .navbar {
+      max-width: 1400px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 5%;
+    }
+
+    .nav-links {
+      display: flex;
+      list-style: none;
+    }
+
+    .nav-item {
+      position: relative;
+    }
+
+    .nav-link {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      padding: 16px 20px;
+      color: #ffffff;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 500;
+      transition: background 0.2s;
+    }
+
+    .nav-link:hover, .nav-item:hover .nav-link {
+      background: var(--primary-dark);
+    }
+
+    .nav-link .arrow-down {
+      font-size: 0.7rem;
+      transition: transform 0.2s;
+    }
+
+    .nav-item:hover .arrow-down {
+      transform: rotate(180deg);
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      background: #ffffff;
+      min-width: 220px;
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+      border-top: 3px solid var(--accent-red);
+      opacity: 0;
+      visibility: hidden;
+      transform: translateY(10px);
+      transition: all 0.2s ease;
+    }
+
+    .nav-item:hover .dropdown-menu {
+      opacity: 1;
+      visibility: visible;
+      transform: translateY(0);
+    }
+
+    .dropdown-item {
+      display: block;
+      padding: 12px 20px;
+      color: var(--text-dark);
+      text-decoration: none;
+      font-size: 0.9rem;
+      border-bottom: 1px solid #f1f5f9;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .dropdown-item:hover {
+      background: #f8fafc;
+      color: var(--primary-maroon);
+      padding-left: 24px;
+    }
+
+    .btn-emergency {
+      background: var(--accent-red);
+      color: white;
+      text-decoration: none;
+      padding: 8px 16px;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.2s;
+    }
+
+    .btn-emergency:hover {
+      background: #dc2626;
+    }
+
+    /* --- HERO TELEMETRY GRID WITH MULTILINGUAL SEARCH --- */
+    .hero {
+      background: linear-gradient(135deg, #fff5f5 0%, #fff 100%);
+      padding: 60px 5%;
+      text-align: center;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    .hero-eyebrow {
+      color: var(--accent-red);
+      font-weight: 700;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      margin-bottom: 12px;
+    }
+
+    .hero-title {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.5rem;
+      color: var(--primary-maroon);
+      margin-bottom: 16px;
+    }
+
+    .hero-title .accent {
+      color: var(--accent-red);
+    }
+
+    .hero-sub {
+      color: var(--text-muted);
+      max-width: 700px;
+      margin: 0 auto 32px;
+      font-size: 1.1rem;
+      line-height: 1.6;
+    }
+
+    .hero-search {
+      background: white;
+      padding: 12px;
+      border-radius: var(--radius-lg);
+      box-shadow: 0 10px 25px -5px rgb(0 0 0 / 0.08);
+      max-width: 850px;
+      margin: 0 auto 48px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .hero-select, .hero-input {
+      padding: 14px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      outline: none;
+    }
+
+    .hero-select { width: 25%; background-color: #fafafa; }
+    .hero-input { width: 45%; }
+
+    /* Voice Assistant Microphone UI Element Styles */
+    .btn-mic {
+      width: 10%;
+      background: #f1f5f9;
+      color: #475569;
+      border: 1px solid var(--border-color);
+      padding: 13px;
+      font-size: 1.1rem;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .btn-mic:hover {
+      background: #e2e8f0;
+      color: var(--primary-maroon);
+    }
+
+    .btn-mic.listening {
+      background: var(--accent-red);
+      color: #ffffff;
+      border-color: var(--accent-red);
+      animation: micPulse-Effect 1.4s infinite;
+    }
+
+    @keyframes micPulse-Effect {
+      0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.4); }
+      70% { transform: scale(1.04); box-shadow: 0 0 0 10px rgba(239, 68, 68, 0); }
+      100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
+    }
+
+    .btn-search {
+      width: 20%;
+      background: var(--primary-maroon);
+      color: white;
+      border: none;
+      font-weight: 600;
+      padding: 14px;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-search:hover { background: var(--primary-dark); }
+
+    /* --- STATS GRID --- */
+    .hero-stats {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+
+    .stat-card {
+      background: white;
+      padding: 24px;
+      border-radius: var(--radius-md);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .stat-num {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 700;
+      color: var(--primary-maroon);
+    }
+
+    .stat-label {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      margin-top: 4px;
+      font-weight: 500;
+    }
+
+    /* --- MAIN CONTENT & CONTROLS --- */
+    .section {
+      max-width: 1400px;
+      margin: 48px auto;
+      padding: 0 5%;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+
+    .section-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      font-size: 1.5rem;
+      color: var(--primary-maroon);
+    }
+
+    .live-badge {
+      background: #dcfce7;
+      color: #15803d;
+      padding: 6px 12px;
+      border-radius: 20px;
+      font-size: 0.75rem;
+      font-weight: 700;
+    }
+
+    .grid-controls {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .grid-controls input, .grid-controls select {
+      padding: 10px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      outline: none;
+      font-size: 0.9rem;
+    }
+
+    .grid-controls input { flex-grow: 1; }
+
+    /* --- DATA MATRIX TABLE --- */
+    .table-wrap {
+      background: white;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+      overflow-x: auto;
+    }
+
+    .scarcity-table {
+      width: 100%;
+      border-collapse: collapse;
+      text-align: left;
+      font-size: 0.9rem;
+    }
+
+    .scarcity-table th {
+      background: #f8fafc;
+      padding: 16px;
+      font-weight: 600;
+      color: var(--text-dark);
+      border-bottom: 2px solid var(--border-color);
+    }
+
+    .scarcity-table td {
+      padding: 16px;
+      border-bottom: 1px solid var(--border-color);
+    }
+
+    /* --- MAP CONFIGURATION SPECIFICS --- */
+    #mainMap {
+      border-radius: var(--radius-lg); 
+      border: 1px solid var(--border-color); 
+      box-shadow: var(--shadow); 
+      overflow: hidden; 
+      height: 450px;
+      background: #f1f5f9;
+    }
+
+    .map-pulse-pin {
+      border-radius: 50%;
+      border: 2px solid #ffffff;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.25);
+    }
+
+    /* --- FOOTER --- */
+    .footer {
+      background: #1e293b;
+      color: #94a3b8;
+      text-align: center;
+      padding: 32px;
+      margin-top: 80px;
+      font-size: 0.9rem;
+    }
+
+    .map-legend .dot {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-left: 12px;
+    }
+    .dot.red { background: var(--accent-red); }
+    .dot.yellow { background: #eab308; }
+    .dot.green { background: #22c55e; }
+  </style>
+</head>
+<body>
+
+<div class="gov-header">
+  <div class="gov-branding">
+    <div id="govMinistryTitle" style="font-size: 0.8rem; font-weight: 700; line-height: 1.2; color:#334155;">MINISTRY OF<br>HEALTH AND FAMILY WELFARE</div>
+    <div class="brand-divider"></div>
+    <a href="index.html" class="raktsetu-identity">
+      <span class="logo-icon">🩸</span>
+      <span class="logo-text">RaktSetu</span>
+    </a>
+  </div>
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="changeSystemLanguage('en', this)">EN</button>
+    <button class="lang-btn" onclick="changeSystemLanguage('hi', this)">HI</button>
+    <button class="lang-btn" onclick="changeSystemLanguage('te', this)">TE</button>
+  </div>
+</div>
+
+<div class="navbar-container">
+  <nav class="navbar">
+    <ul class="nav-links">
+      <li class="nav-item"><a href="index.html" class="nav-link" id="navLnkDashboard" style="background: var(--primary-dark)">Dashboard</a></li>
+      
+      <li class="nav-item">
+        <a href="#" class="nav-link" id="navLnkLooking">Looking for Blood <span class="arrow-down">▼</span></a>
+        <div class="dropdown-menu">
+          <a href="pages/donors.html" class="dropdown-item" id="navDropDonorLogin">Donor Login</a>
+          <a href="pages/bloodbank.html" class="dropdown-item" id="navDropAvailability">Blood Availability</a>
+          <a href="pages/bloodbank.html" class="dropdown-item" id="navDropDirectory">Blood Center Directory</a>
+         <a href="pages/thalassemia-request.html" class="dropdown-item" id="navDropThalassemia">Thalassemia Request</a>
+        </div>
+      </li>
+
+      <li class="nav-item">
+        <a href="#" class="nav-link" id="navLnkDonate">Want to Donate <span class="arrow-down">▼</span></a>
+        <div class="dropdown-menu">
+          <a href="pages/donors.html" class="dropdown-item" id="navDropRegistration">Donor Registration</a>
+          <a href="pages/leaderboard.html" class="dropdown-item" id="navDropLeaderboard">LifeSaver Board</a>
+         <a href="pages/donation-camps.html" class="dropdown-item">Donation Camps</a>
+</div>
+      </li>
+
+      <li class="nav-item">
+        <a href="#" class="nav-link" id="navLnkLogin">Blood Centre Login <span class="arrow-down">▼</span></a>
+        <div class="dropdown-menu">
+         <a href="pages/regional-login.html" class="dropdown-item" id="navDropDepotLogin">Regional Depot Login</a>
+          <a href="pages/recovery-stream.html" class="dropdown-item" id="navDropRecoveryStream">Data Recovery Stream</a>
+        </div>
+      </li>
+    </ul>
+    <div class="nav-emergency">
+      <a href="pages/emergency.html" class="btn-emergency" id="navBtnEmergency">🚨 Emergency Request</a>
+    </div>
+  </nav>
+</div>
+
+<header class="hero">
+  <div class="hero-eyebrow" id="heroTxtEyebrow">🔴 Nationwide Emergency Telemetry Grid</div>
+  <h1 class="hero-title" id="heroTxtTitle">Beating the Golden Hour with <span class="accent">Live Logistics</span></h1>
+  <p class="hero-sub" id="heroTxtSub">Aggregating real-time storage logs from verified regional medical bases to eliminate inventory search failures during trauma situations.</p>
+  
+  <div class="hero-search">
+    <select id="heroBloodGroup" class="hero-select">
+      <option value="" id="selectBloodGroupPlaceholder">Select Blood Group</option>
+      <option value="A+">A+</option><option value="A-">A-</option>
+      <option value="B+">B+</option><option value="B-">B-</option>
+      <option value="AB+">AB+</option><option value="AB-">AB-</option>
+      <option value="O+">O+</option><option value="O-">O-</option>
+    </select>
+    <input type="text" id="heroCityInput" class="hero-input" placeholder="Enter target city name (e.g. Tirupati)..."/>
+    
+    <button class="btn-mic" id="voiceAssistantMicBtn" onclick="toggleVoiceAssistantEngine()" title="Voice Search Assistance">🎙️</button>
+    
+    <button class="btn-search" id="heroBtnSearch" onclick="heroSearch()">🔍 Scan Grid</button>
+  </div>
+
+  <div class="hero-stats">
+    <div class="stat-card">
+      <span class="stat-num" id="statUnits">84</span>
+      <span class="stat-label" id="lblStatUnits">Total Units Available</span>
+    </div>
+    <div class="stat-card">
+      <span class="stat-num">8</span>
+      <span class="stat-label" id="lblStatDepots">Connected Depots</span>
+    </div>
+    <div class="stat-card" style="border-color: rgba(239,68,68,0.2);">
+      <span class="stat-num" style="color: var(--accent-red);">2</span>
+      <span class="stat-label" id="lblStatIncidents">Active Incidents</span>
+    </div>
+  </div>
+</header>
+
+<main class="section">
+  
+  <div class="section-header">
+    <h2 id="lblRosterHeader">Live Regional Grid Monitoring Roster</h2>
+    <div class="map-legend">
+      <span class="live-badge" id="lblSocketsBadge">🟢 SOCKETS DATA RECOVERY STREAM LIVE</span>
+    </div>
+  </div>
+
+  <div class="grid-controls">
+    <input type="text" id="cityFilter" placeholder="Filter by City / Province..."/>
+    <select id="statusFilter">
+      <option value="" id="optStatusAll">All Scarcity States</option>
+      <option value="critical" id="optStatusCritical">🔴 Critical Scarcity</option>
+      <option value="low" id="optStatusLow">🟡 Low Reserves</option>
+      <option value="available" id="optStatusAvailable">🟢 Healthy Buffers</option>
+    </select>
+    <select id="groupFilter">
+      <option value="" id="optGroupSort">Sort by Availability Density</option>
+      <option value="O-">O- Availability</option>
+      <option value="O+">O+ Availability</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
+    <table class="scarcity-table">
+      <thead>
+        <tr>
+          <th id="thFacility">Blood Center Facility</th>
+          <th id="thLocation">Location Node</th>
+          <th style="text-align:center;">A+</th>
+          <th style="text-align:center;">A-</th>
+          <th style="text-align:center;">B+</th>
+          <th style="text-align:center;">B-</th>
+          <th style="text-align:center;">AB+</th>
+          <th style="text-align:center;">AB-</th>
+          <th style="text-align:center;">O+</th>
+          <th style="text-align:center;">O-</th>
+          <th id="thStatus">Operational Status</th>
+          <th id="thUpdates">Last Update Ticks</th>
+        </tr>
+      </thead>
+      <tbody id="scarcityBody">
+        <tr>
+          <td><b>Regional Trauma Base Alpha</b></td>
+          <td>Tirupati Node</td>
+          <td align="center">12</td><td align="center">2</td>
+          <td align="center">15</td><td align="center">0</td>
+          <td align="center">8</td><td align="center">1</td>
+          <td align="center">24</td><td align="center">4</td>
+          <td><span style="color:#22c55e; font-weight:600;" id="txtOperationalStatus">🟢 Operational</span></td>
+          <td id="txtLastUpdateText">Just Now</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="section-header" style="margin-top: 48px; margin-bottom: 16px;">
+    <h2 id="lblMatrixHeader">Spatial Distribution Topography Matrix</h2>
+    <div class="map-legend" id="lblMapLegendDots">
+      <span class="dot red"></span> Critical
+      <span class="dot yellow"></span> Low
+      <span class="dot green"></span> Safe Buffer
+    </div>
+  </div>
+  
+  <div id="mainMap"></div>
+
+</main>
+
+<footer class="footer">
+  <p id="lblFooterText">🩸 RaktSetu Logistics Management Hub — Open Source Stack Framework</p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+  // --- TRANSLATION DATABASE LOGICAL ARRAYS ---
+  const localTranslationDictionary = {
+    en: {
+      govMinistryTitle: "MINISTRY OF<br>HEALTH AND FAMILY WELFARE",
+      navLnkDashboard: "Dashboard",
+      navLnkLooking: "Looking for Blood ▼",
+      navDropDonorLogin: "Donor Login",
+      navDropAvailability: "Blood Availability",
+      navDropDirectory: "Blood Center Directory",
+      navDropThalassemia: "Thalassemia Request",
+      navLnkDonate: "Want to Donate ▼",
+      navDropRegistration: "Donor Registration",
+      navDropLeaderboard: "LifeSaver Board",
+      navDropCamps: "Donation Camps",
+      navLnkLogin: "Blood Centre Login ▼",
+      navDropDepotLogin: "Regional Depot Login",
+      navDropRecoveryStream: "Data Recovery Stream",
+      navBtnEmergency: "🚨 Emergency Request",
+      heroTxtEyebrow: "🔴 Nationwide Emergency Telemetry Grid",
+      heroTxtTitle: "Beating the Golden Hour with <span class='accent'>Live Logistics</span>",
+      heroTxtSub: "Aggregating real-time storage logs from verified regional medical bases to eliminate inventory search failures during trauma situations.",
+      selectBloodGroupPlaceholder: "Select Blood Group",
+      placeholderCityInput: "Enter target city name (e.g. Tirupati)...",
+      heroBtnSearch: "🔍 Scan Grid",
+      lblStatUnits: "Total Units Available",
+      lblStatDepots: "Connected Depots",
+      lblStatIncidents: "Active Incidents",
+      lblRosterHeader: "Live Regional Grid Monitoring Roster",
+      lblSocketsBadge: "🟢 SOCKETS DATA RECOVERY STREAM LIVE",
+      optStatusAll: "All Scarcity States",
+      optStatusCritical: "🔴 Critical Scarcity",
+      optStatusLow: "🟡 Low Reserves",
+      optStatusAvailable: "🟢 Healthy Buffers",
+      optGroupSort: "Sort by Availability Density",
+      thFacility: "Blood Center Facility",
+      thLocation: "Location Node",
+      thStatus: "Operational Status",
+      thUpdates: "Last Update Ticks",
+      txtOperationalStatus: "🟢 Operational",
+      txtLastUpdateText: "Just Now",
+      lblMatrixHeader: "Spatial Distribution Topography Matrix",
+      lblMapLegendDots: "<span class='dot red'></span> Critical <span class='dot yellow'></span> Low <span class='dot green'></span> Safe Buffer",
+      lblFooterText: "🩸 RaktSetu Logistics Management Hub — Open Source Stack Framework"
+    },
+    hi: {
+      govMinistryTitle: "स्वास्थ्य और<br>परिवार कल्याण मंत्रालय",
+      navLnkDashboard: "डैशबोर्ड",
+      navLnkLooking: "रक्त की आवश्यकता ▼",
+      navDropDonorLogin: "रक्तदाता लॉगिन",
+      navDropAvailability: "रक्त की उपलब्धता",
+      navDropDirectory: "रक्त केंद्र निर्देशिका",
+      navDropThalassemia: "थैलेसीमिया अनुरोध",
+      navLnkDonate: "रक्तदान करना चाहते हैं ▼",
+      navDropRegistration: "दाता पंजीकरण",
+      navDropLeaderboard: "लाइफసేవర్ బోర్డు",
+      navDropCamps: "रक्तदान शिविर",
+      navLnkLogin: "ब्लड सेंटर लॉगिन ▼",
+      navDropDepotLogin: "क्षेत्रीय डिपो लॉगिन",
+      navDropRecoveryStream: "डेटा रिकवरी स्ट्रीम",
+      navBtnEmergency: "🚨 आपातकालीन अनुरोध",
+      heroTxtEyebrow: "🔴 देशव्यापी आपातकालीन टेलीमेट्री ग्रिड",
+      heroTxtTitle: "लाइव लॉजिस्टिक्स के साथ <span class='accent'>स्वर्ण घंटे को मात देना</span>",
+      heroTxtSub: "ट्रॉमा स्थितियों के दौरान इन्वेंट्री खोज विफलताओं को समाप्त करने के लिए सत्यापित क्षेत्रीय चिकित्सा ठिकानों से रीयल-टाइम डेटा एकत्र करना।",
+      selectBloodGroupPlaceholder: "रक्त समूह चुनें",
+      placeholderCityInput: "लक्ष्य शहर का नाम दर्ज करें (जैसे: Tirupati)...",
+      heroBtnSearch: "🔍 ग्रिड स्कैन करें",
+      lblStatUnits: "कुल उपलब्ध इकाइयाँ",
+      lblStatDepots: "कनेक्टेड डिपो",
+      lblStatIncidents: "सक्रिय मामले",
+      lblRosterHeader: "लाइव क्षेत्रीय ग्रिड निगरानी सूची",
+      lblSocketsBadge: "🟢 सॉकेट्स डेटा रिकवरी स्ट्रीम लाइव",
+      optStatusAll: "सभी कमी की स्थिति",
+      optStatusCritical: "🔴 गंभीर कमी",
+      optStatusLow: "🟡 कम भंडार",
+      optStatusAvailable: "🟢 स्वस्थ बफर",
+      optGroupSort: "उपलब्धता घनत्व द्वारा क्रमबद्ध करें",
+      thFacility: "रक्त केंद्र सुविधा",
+      thLocation: "स्थान नोड",
+      thStatus: "परिचालन स्थिति",
+      thUpdates: "अंतिम अद्यतन टिक",
+      txtOperationalStatus: "🟢 चालू है",
+      txtLastUpdateText: "अभी-अभी",
+      lblMatrixHeader: "स्थानिक वितरण स्थलाकृति मैट्रिक्स",
+      lblMapLegendDots: "<span class='dot red'></span> गंभीर कमी <span class='dot yellow'></span> कम भंडार <span class='dot green'></span> सुरक्षित बफर",
+      lblFooterText: "🩸 रक्तसेतु रसद प्रबंधन केंद्र — ओपन सोर्स स्टैक फ्रेमवर्क"
+    },
+    te: {
+      govMinistryTitle: "ఆరోగ్య మరియు<br>కుటుంబ సంక్షేమ మంత్రిత్వ శాఖ",
+      navLnkDashboard: "డ్యాష్‌బోర్డ్",
+      navLnkLooking: "రక్తం కోసం అన్వేషణ ▼",
+      navDropDonorLogin: "దాత లాగిన్",
+      navDropAvailability: "రక్తం లభ్యత",
+      navDropDirectory: "బ్లడ్ సెంటర్ డైరెక్టరీ",
+      navDropThalassemia: "థాలసేమియా అభ్యర్థన",
+      navLnkDonate: "రక్తదానం చేయడానికి ▼",
+      navDropRegistration: "దాత నమోదు",
+      navDropLeaderboard: "లైఫ్‌సేవర్ బోర్డు",
+      navDropCamps: "రక్తదాన శిబిరాలు",
+      navLnkLogin: "బ్లడ్ సెంటర్ లాగిన్ ▼",
+      navDropDepotLogin: "ప్రాంతీయ డిపో లాగిన్",
+      navDropRecoveryStream: "డేటా రికవరీ స్ట్రీమ్",
+      navBtnEmergency: "🚨 అత్యవసర అభ్యర్థన",
+      heroTxtEyebrow: "🔴 దేశవ్యాప్త అత్యవసర టెలిమెట్రీ గ్రిడ్",
+      heroTxtTitle: "లైవ్ లాజిస్టిక్స్‌తో <span class='accent'>గోల్డెన్ అవర్‌ను అధిగమించడం</span>",
+      heroTxtSub: "అత్యవసర పరిస్థితుల్లో ఇన్వెంటరీ శోధన వైఫల్యాలను తొలగించడానికి ధృవీకరించబడిన ప్రాంతీయ వైద్య స్థావరాల నుండి నిజ-సమయ నిల్వ లాగ్‌లను సమగ్రపరచడం.",
+      selectBloodGroupPlaceholder: "బ్లడ్ గ్రూప్ ఎంచుకోండి",
+      placeholderCityInput: "నగరం పేరు నమోదు చేయండి (ఉదా: తిరుపతి)...",
+      heroBtnSearch: "🔍 గ్రిడ్ స్కాన్",
+      lblStatUnits: "మొత్తం అందుబాటులో ఉన్న యూనిట్లు",
+      lblStatDepots: "కనెక్ట్ చేయబడిన డిపోలు",
+      lblStatIncidents: "క్రియాశీల సంఘటనలు",
+      lblRosterHeader: "లైవ్ ప్రాంతీయ గ్రిడ్ పర్యవేక్షణ రోస్టర్",
+      lblSocketsBadge: "🟢 సాకెట్స్ డేటా రికవరీ స్ట్రీమ్ లైవ్",
+      optStatusAll: "అన్ని కొరత స్థితులు",
+      optStatusCritical: "🔴 క్లిష్టమైన కొరత",
+      optStatusLow: "🟡 తక్కువ నిల్వలు",
+      optStatusAvailable: "🟢 సురక్షిత బఫర్లు",
+      optGroupSort: "లభ్యత సాంద్రత ఆధారంగా అమర్చు",
+      thFacility: "బ్లడ్ సెంటర్ సదుపాయం",
+      thLocation: "లొకేషన్ నోడ్",
+      thStatus: "ఆపరేషనల్ స్థితి",
+      thUpdates: "చివరి అప్‌డేట్",
+      txtOperationalStatus: "🟢 అందుబాటులో ఉంది",
+      txtLastUpdateText: "ఇప్పుడే",
+      lblMatrixHeader: "ప్రాంతీయ పంపిణీ స్థలాకృతి గ్రిడ్",
+      lblMapLegendDots: "<span class='dot red'></span> అత్యవసర కొరత <span class='dot yellow'></span> తక్కువ నిల్వ <span class='dot green'></span> సురక్షితం",
+      lblFooterText: "🩸 రక్తసేతు లాజిస్టిక్స్ మేనేజ్‌మెంట్ హబ్ — ఓపెన్ సోర్స్ స్టాక్ ఫ్రేమ్‌వర్క్"
+    }
+  };
+
+  let systemGlobalActiveLanguage = 'en';
+  let speechRecognitionEngineModule;
+  let isRuntimeVoiceEngineListening = false;
+
+  function changeSystemLanguage(selectedTargetLangCode, buttonContextElement) {
+    systemGlobalActiveLanguage = selectedTargetLangCode;
+    
+    // Manage Language Select Visual Active State Row
+    document.querySelectorAll('.lang-toggle .lang-btn').forEach(btn => btn.classList.remove('active'));
+    if(buttonContextElement) buttonContextElement.classList.add('active');
+
+    const localizedDataset = localTranslationDictionary[selectedTargetLangCode];
+    
+    // Inject Target Document Node Translations Seamlessly
+    document.getElementById('govMinistryTitle').innerHTML = localizedDataset.govMinistryTitle;
+    document.getElementById('navLnkDashboard').innerText = localizedDataset.navLnkDashboard;
+    document.getElementById('navLnkLooking').innerHTML = localizedDataset.navLnkLooking;
+    document.getElementById('navDropDonorLogin').innerText = localizedDataset.navDropDonorLogin;
+    document.getElementById('navDropAvailability').innerText = localizedDataset.navDropAvailability;
+    document.getElementById('navDropDirectory').innerText = localizedDataset.navDropDirectory;
+    document.getElementById('navDropThalassemia').innerText = localizedDataset.navDropThalassemia;
+    document.getElementById('navLnkDonate').innerHTML = localizedDataset.navLnkDonate;
+    document.getElementById('navDropRegistration').innerText = localizedDataset.navDropRegistration;
+    document.getElementById('navDropLeaderboard').innerText = localizedDataset.navDropLeaderboard;
+    document.getElementById('navDropCamps').innerText = localizedDataset.navDropCamps;
+    document.getElementById('navLnkLogin').innerHTML = localizedDataset.navLnkLogin;
+    document.getElementById('navDropDepotLogin').innerText = localizedDataset.navDropDepotLogin;
+    document.getElementById('navDropRecoveryStream').innerText = localizedDataset.navDropRecoveryStream;
+    document.getElementById('navBtnEmergency').innerText = localizedDataset.navBtnEmergency;
+    document.getElementById('heroTxtEyebrow').innerText = localizedDataset.heroTxtEyebrow;
+    document.getElementById('heroTxtTitle').innerHTML = localizedDataset.heroTxtTitle;
+    document.getElementById('heroTxtSub').innerText = localizedDataset.heroTxtSub;
+    document.getElementById('selectBloodGroupPlaceholder').innerText = localizedDataset.selectBloodGroupPlaceholder;
+    document.getElementById('heroCityInput').placeholder = localizedDataset.placeholderCityInput;
+    document.getElementById('heroBtnSearch').innerText = localizedDataset.heroBtnSearch;
+    document.getElementById('lblStatUnits').innerText = localizedDataset.lblStatUnits;
+    document.getElementById('lblStatDepots').innerText = localizedDataset.lblStatDepots;
+    document.getElementById('lblStatIncidents').innerText = localizedDataset.lblStatIncidents;
+    document.getElementById('lblRosterHeader').innerText = localizedDataset.lblRosterHeader;
+    document.getElementById('lblSocketsBadge').innerText = localizedDataset.lblSocketsBadge;
+    document.getElementById('optStatusAll').innerText = localizedDataset.optStatusAll;
+    document.getElementById('optStatusCritical').innerText = localizedDataset.optStatusCritical;
+    document.getElementById('optStatusLow').innerText = localizedDataset.optStatusLow;
+    document.getElementById('optStatusAvailable').innerText = localizedDataset.optStatusAvailable;
+    document.getElementById('optGroupSort').innerText = localizedDataset.optGroupSort;
+    document.getElementById('thFacility').innerText = localizedDataset.thFacility;
+    document.getElementById('thLocation').innerText = localizedDataset.thLocation;
+    document.getElementById('thStatus').innerText = localizedDataset.thStatus;
+    document.getElementById('thUpdates').innerText = localizedDataset.thUpdates;
+    document.getElementById('txtOperationalStatus').innerText = localizedDataset.txtOperationalStatus;
+    document.getElementById('txtLastUpdateText').innerText = localizedDataset.txtLastUpdateText;
+    document.getElementById('lblMatrixHeader').innerText = localizedDataset.lblMatrixHeader;
+    document.getElementById('lblMapLegendDots').innerHTML = localizedDataset.lblMapLegendDots;
+    document.getElementById('lblFooterText').innerText = localizedDataset.lblFooterText;
+  }
+
+  // --- MULTILINGUAL MICROPHONE ASSISTANT INTERACTION ENGINE ---
+  function initializeVoiceAssistantCoreModule() {
+    const speechAPIHostInstance = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!speechAPIHostInstance) {
+      alert("Web Speech Voice Engine Engine layer is unavailable on this browser. Use Chrome/Edge desktop clients.");
+      return;
+    }
+    
+    speechRecognitionEngineModule = new speechAPIHostInstance();
+    speechRecognitionEngineModule.continuous = false;
+    speechRecognitionEngineModule.interimResults = false;
+
+    speechRecognitionEngineModule.onstart = () => {
+      isRuntimeVoiceEngineListening = true;
+      document.getElementById('voiceAssistantMicBtn').classList.add('listening');
+    };
+
+    speechRecognitionEngineModule.onend = () => {
+      isRuntimeVoiceEngineListening = false;
+      document.getElementById('voiceAssistantMicBtn').classList.remove('listening');
+    };
+
+    speechRecognitionEngineModule.onerror = (err) => {
+      console.error("Speech Execution Stack Error Block: ", err);
+      isRuntimeVoiceEngineListening = false;
+      document.getElementById('voiceAssistantMicBtn').classList.remove('listening');
+    };
+
+    speechRecognitionEngineModule.onresult = (event) => {
+      const compiledVocalResultText = event.results[0][0].transcript.toLowerCase().trim();
+      console.log("Telemetry Voice Input Stream Token Match: ", compiledVocalResultText);
+      parseAndDistributeSpeechTokens(compiledVocalResultText);
+    };
+  }
+
+  function toggleVoiceAssistantEngine() {
+    if (!speechRecognitionEngineModule) initializeVoiceAssistantCoreModule();
+    if (!speechRecognitionEngineModule) return;
+
+    if (isRuntimeVoiceEngineListening) {
+      speechRecognitionEngineModule.stop();
+    } else {
+      // Direct recognition target engine arrays based on localized active choices
+      const systemBcpLanguageMatrixCodes = { en: 'en-US', hi: 'hi-IN', te: 'te-IN' };
+      speechRecognitionEngineModule.lang = systemBcpLanguageMatrixCodes[systemGlobalActiveLanguage];
+      speechRecognitionEngineModule.start();
+    }
+  }
+
+  function parseAndDistributeSpeechTokens(capturedSpokenString) {
+    const targetUISelectFieldElement = document.getElementById('heroBloodGroup');
+    const targetUIInputFieldElement = document.getElementById('heroCityInput');
+
+    // Cross-lingual multi-index semantic dictionary matching properties
+    const standardBloodGroupPhoneticKeyMapping = {
+      'a+': 'A+', 'a positive': 'A+', 'ए पॉजिटिव': 'A+', 'ఏ పాజిటివ్': 'A+',
+      'a-': 'A-', 'a negative': 'A-', 'ए नेगेटिव': 'A-', 'ఏ నెగటివ్': 'A-',
+      'b+': 'B+', 'b positive': 'B+', 'बी पॉजिटिव': 'B+', 'బి పాజిటివ్': 'B+',
+      'b-': 'B-', 'b negative': 'B-', 'बी नेगेटिव': 'B-', 'బి నెగటివ్': 'B-',
+      'ab+': 'AB+', 'ab positive': 'AB+', 'एबी पॉजिटिव': 'AB+', 'ఎబి పాజిటివ్': 'AB+',
+      'ab-': 'AB-', 'ab negative': 'AB-', 'एबी नेगेटिव': 'AB-', 'ఎబి నెగటివ్': 'AB-',
+      'o+': 'O+', 'o positive': 'O+', 'ओ पॉजिटिव': 'O+', 'ఓ పాజిటివ్': 'O+',
+      'o-': 'O-', 'o negative': 'O-', 'ओ नेगेटिव': 'O-', 'ఓ నెగటివ్': 'O-'
+    };
+
+    let identifiedAndProcessedBloodTokenMatch = false;
+    for (let currentPhoneticKeyString in standardBloodGroupPhoneticKeyMapping) {
+      if (capturedSpokenString.includes(currentPhoneticKeyString)) {
+        targetUISelectFieldElement.value = standardBloodGroupPhoneticKeyMapping[currentPhoneticKeyString];
+        capturedSpokenString = capturedSpokenString.replace(currentPhoneticKeyString, '').trim();
+        identifiedAndProcessedBloodTokenMatch = true;
+        break;
+      }
+    }
+
+    // Allocate any leftover parsed speech content to the location criteria field
+    if (capturedSpokenString.length > 1) {
+      // Strip common filler noise strings
+      capturedSpokenString = capturedSpokenString.replace(/(find|search|in|for|ब्लड|బ్లడ్|నగరం|शहर)/g, '').trim();
+      if(capturedSpokenString) {
+        targetUIInputFieldElement.value = capturedSpokenString.charAt(0).toUpperCase() + capturedSpokenString.slice(1);
+      }
+    }
+    
+    if (identifiedAndProcessedBloodTokenMatch || targetUIInputFieldElement.value) {
+      setTimeout(() => { heroSearch(); }, 400);
+    }
+  }
+
+  // --- LEAFLET MAP ENGINE ENVIRONMENT INITIALIZATION ---
+  document.addEventListener('DOMContentLoaded', function() {
+    const mapInstance = L.map('mainMap').setView([13.6288, 79.4192], 8);
+
+    L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png', {
+      maxZoom: 19,
+      attribution: '&copy; OpenStreetMap &copy; CARTO'
+    }).addTo(mapInstance);
+
+    const logisticalNodes = [
+      { name: "Regional Trauma Base Alpha", lat: 13.6288, lng: 79.4192, status: "green", info: "O+: 24 | O-: 4 Units Available" },
+      { name: "Chittoor Emergency Depot", lat: 13.2172, lng: 79.1003, status: "red", info: "O-: 0 Units | CRITICAL SHORTAGE" },
+      { name: "Nellore Logistics Center", lat: 14.4426, lng: 79.9865, status: "yellow", info: "A+: 14 | Low Backup Stock" },
+      { name: "Kadapa Grid Reserve", lat: 14.4673, lng: 78.8242, status: "green", info: "Healthy Buffers Intact" }
+    ];
+
+    const pinPalette = {
+      red: '#ef4444',
+      yellow: '#eab308',
+      green: '#22c55e'
+    };
+
+    logisticalNodes.forEach(function(node) {
+      const livePin = L.divIcon({
+        className: 'map-pulse-pin',
+        html: `<div style="background-color: ${pinPalette[node.status]}; width: 14px; height: 14px; border-radius: 50%;"></div>`,
+        iconSize: [14, 14],
+        iconAnchor: [7, 7]
+      });
+
+      L.marker([node.lat, node.lng], { icon: livePin })
+        .addTo(mapInstance)
+        .bindPopup(`<strong>${node.name}</strong><br><span style="font-size:0.85rem; color:#475569;">${node.info}</span>`);
+    });
+  });
+
+  function heroSearch() {
+    const selectedBloodValue = document.getElementById('heroBloodGroup').value;
+    const imputedCityValue = document.getElementById('heroCityInput').value;
+    alert(`Scanning Matrix Filters -> Group: ${selectedBloodValue || 'Any'} | Location Node: ${imputedCityValue || 'All Nodes'}`);
+  }
+</script>
+</body>
+</html>

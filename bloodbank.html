@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Blood Banks – RaktSetu</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"/>
+  <style>
+    /* Premium UI Fallbacks to match your style design */
+    :root {
+      --primary: #4f46e5;
+      --border: #e2e8f0;
+      --text-muted: #64748b;
+    }
+    .notification-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0f172a;
+      color: white;
+      padding: 14px 24px;
+      border-radius: 12px;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+      font-size: 0.95rem;
+      font-weight: 500;
+      z-index: 1000;
+      animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-brand">
+    <a href="../index.html" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:8px">
+      <span class="brand-drop">🩸</span><span class="brand-name">RaktSetu</span>
+    </a>
+  </div>
+  <ul class="nav-links">
+    <li><a href="../index.html">Dashboard</a></li>
+    <li><a href="bloodbank.html" class="active">Blood Banks</a></li>
+    <li><a href="donors.html">Donors</a></li>
+    <li><a href="emergency.html">Emergency</a></li>
+    <li><a href="leaderboard.html">LifeSaver Board</a></li>
+  </ul>
+  <div class="nav-emergency"><a href="emergency.html" class="btn-emergency">🚨 Emergency Request</a></div>
+</nav>
+
+<div class="page-header">
+  <h1>Blood Bank Management</h1>
+  <p>Update live stock counts. Changes reflect immediately on the national grid.</p>
+</div>
+
+<div class="section">
+  <div class="bb-controls" style="display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; gap:16px; flex-wrap:wrap;">
+    <input type="text" id="bbSearch" placeholder="Search blood bank or city…" oninput="renderBankCards()" class="form-input" style="max-width:320px; width:100%;"/>
+    <button class="btn-add" onclick="showAddBankModal()">+ Register New Bank</button>
+  </div>
+
+  <div id="bankCardsGrid" class="bank-cards-grid"></div>
+</div>
+
+<div id="stockModal" class="modal-overlay" style="display:none" onclick="closeModal(event, 'stockModal')">
+  <div class="modal-box">
+    <h2 id="modalBankName">Update Stock</h2>
+    <p style="color:#6b7280;margin-bottom:16px">Adjust blood unit counts. Hit Save to push live.</p>
+    <div id="stockInputs" class="stock-inputs-grid"></div>
+    <div style="display:flex;gap:12px;margin-top:20px">
+      <button class="btn-submit-emergency" onclick="saveStock()">💾 Save & Push Live</button>
+      <button onclick="document.getElementById('stockModal').style.display='none'" style="background:#f1f5f9;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:14px">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div id="registerModal" class="modal-overlay" style="display:none" onclick="closeModal(event, 'registerModal')">
+  <div class="modal-box">
+    <h2>Register New Blood Bank</h2>
+    <p style="color:#6b7280;margin-bottom:16px">Enter facility details to create an operational hub track.</p>
+    <div style="display:flex; flex-direction:column; gap:14px;">
+      <div>
+        <label style="display:block; font-size:0.875rem; font-weight:600; margin-bottom:4px;">Bank Facility Name</label>
+        <input type="text" id="newBankName" placeholder="e.g. Metro Red Cross Hub" class="form-input" style="width:100%"/>
+      </div>
+      <div>
+        <label style="display:block; font-size:0.875rem; font-weight:600; margin-bottom:4px;">City / Region</label>
+        <input type="text" id="newBankCity" placeholder="e.g. New Delhi" class="form-input" style="width:100%"/>
+      </div>
+    </div>
+    <div style="display:flex;gap:12px;margin-top:24px">
+      <button class="btn-submit-emergency" onclick="registerNewBank()">Add Center</button>
+      <button onclick="document.getElementById('registerModal').style.display='none'" style="background:#f1f5f9;border:none;padding:10px 20px;border-radius:8px;cursor:pointer;font-size:14px">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<footer class="footer"><p>🩸 RaktSetu — Real-Time Blood Logistics</p></footer>
+
+<script>
+  if (typeof BLOOD_BANKS === 'undefined') {
+    var BLOOD_BANKS = [
+      { id: 1, name: "City Core Blood Bank", city: "New Delhi", stock: { "A+": 12, "A-": 1, "B+": 20, "B-": 0, "O+": 45, "O-": 2, "AB+": 8, "AB-": 0 }, lastUpdated: "2 hours ago" },
+      { id: 2, name: "Red Cross Logistics", city: "Mumbai", stock: { "A+": 5, "A-": 4, "B+": 2, "B-": 1, "O+": 11, "O-": 0, "AB+": 14, "AB-": 3 }, lastUpdated: "1 day ago" }
+    ];
+    var getBankStatus = function(stock) {
+      let zeros = Object.values(stock).filter(v => v === 0).length;
+      if (zeros >= 2) return 'critical';
+      if (zeros === 1) return 'low';
+      return 'available';
+    };
+  }
+</script>
+<script src="../js/data.js"></script>
+
+<script>
+let editingBankId = null;
+
+window.addEventListener('DOMContentLoaded', renderBankCards);
+
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.className = 'notification-toast';
+  toast.innerText = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 3500);
+}
+
+function renderBankCards() {
+  const search = document.getElementById('bbSearch').value.toLowerCase();
+  const grid = document.getElementById('bankCardsGrid');
+  
+  const filtered = BLOOD_BANKS.filter(b =>
+    b.name.toLowerCase().includes(search) || b.city.toLowerCase().includes(search)
+  );
+
+  if(filtered.length === 0) {
+    grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:40px; color:var(--text-muted);">No blood banks found tracking that target criteria.</div>`;
+    return;
+  }
+
+  grid.innerHTML = filtered.map(bank => {
+    const status = getBankStatus(bank.stock);
+    const color = { critical: '#ef4444', low: '#f59e0b', available: '#22c55e' }[status];
+    const total = Object.values(bank.stock).reduce((a,b)=>a+b,0);
+    const groups = Object.entries(bank.stock);
+    return `
+    <div class="bank-card" style="border-top:4px solid ${color}">
+      <div class="bank-card-header">
+        <div>
+          <strong>${bank.name}</strong>
+          <span class="city-tag">${bank.city}</span>
+        </div>
+        <span class="badge badge-${status}">${status.toUpperCase()}</span>
+      </div>
+      <div class="mini-stock-grid">
+        ${groups.map(([g,v]) => `
+          <div class="mini-stock-cell" style="background:${v===0?'#fee2e2':v<=2?'#fef3c7':v<=10?'#dcfce7':'#f0fdf4'}">
+            <span class="mini-group">${g}</span>
+            <span class="mini-count" style="color:${v===0?'#dc2626':v<=2?'#d97706':'#16a34a'}">${v}</span>
+          </div>
+        `).join('')}
+      </div>
+      <div class="bank-card-footer">
+        <span>Total: <strong>${total} units</strong></span>
+        <span style="color:#9ca3af;font-size:12px">${bank.lastUpdated}</span>
+        <button class="btn-edit-stock" onclick="openStockModal(${bank.id})">✏️ Update Stock</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openStockModal(bankId) {
+  editingBankId = bankId;
+  const bank = BLOOD_BANKS.find(b => b.id === bankId);
+  document.getElementById('modalBankName').textContent = `Update: ${bank.name}`;
+  document.getElementById('stockInputs').innerHTML = Object.entries(bank.stock).map(([g,v]) => `
+    <div class="stock-input-row" style="display:flex; align-items:center; justify-content:space-between; margin-bottom:10px;">
+      <label style="font-weight:600; min-width:50px;">${g}</label>
+      <input type="number" id="stock-${g.replace('+','p').replace('-','m')}" value="${v}" min="0" max="200" class="form-input" style="max-width:120px; text-align:center;"/>
+    </div>
+  `).join('');
+  document.getElementById('stockModal').style.display = 'flex';
+}
+
+function saveStock() {
+  const bank = BLOOD_BANKS.find(b => b.id === editingBankId);
+  Object.keys(bank.stock).forEach(g => {
+    const key = `stock-${g.replace('+','p').replace('-','m')}`;
+    const el = document.getElementById(key);
+    if (el) bank.stock[g] = parseInt(el.value) || 0;
+  });
+  bank.lastUpdated = 'Just now';
+  document.getElementById('stockModal').style.display = 'none';
+  renderBankCards();
+  showToast(`✅ Stock for "${bank.name}" updated successfully!`);
+}
+
+function showAddBankModal() {
+  document.getElementById('newBankName').value = "";
+  document.getElementById('newBankCity').value = "";
+  document.getElementById('registerModal').style.display = 'flex';
+}
+
+function registerNewBank() {
+  const name = document.getElementById('newBankName').value.trim();
+  const city = document.getElementById('newBankCity').value.trim();
+
+  if(!name || !city) {
+    alert("Please fill all configuration details.");
+    return;
+  }
+
+  const newId = BLOOD_BANKS.length ? Math.max(...BLOOD_BANKS.map(b => b.id)) + 1 : 1;
+  BLOOD_BANKS.push({
+    id: newId,
+    name: name,
+    city: city,
+    stock: { "A+": 0, "A-": 0, "B+": 0, "B-": 0, "O+": 0, "O-": 0, "AB+": 0, "AB-": 0 },
+    lastUpdated: "Just registered"
+  });
+
+  document.getElementById('registerModal').style.display = 'none';
+  renderBankCards();
+  showToast(`🏢 "${name}" registered into logistics grid database.`);
+}
+
+function closeModal(e, modalId) {
+  if (e.target.id === modalId) document.getElementById(modalId).style.display = 'none';
+}
+</script>
+</body>
+</html>

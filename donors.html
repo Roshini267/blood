@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Donors – RaktSetu</title>
+  <link rel="stylesheet" href="../css/style.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --primary: #4f46e5;
+      --border: #e2e8f0;
+      --text-muted: #64748b;
+    }
+    .notification-toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #0f172a;
+      color: white;
+      padding: 14px 24px;
+      border-radius: 12px;
+      box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3);
+      font-size: 0.95rem;
+      font-weight: 500;
+      z-index: 1000;
+      animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    @keyframes slideUp {
+      from { transform: translateY(20px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
+    }
+    .form-row {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .form-row .form-group {
+      flex: 1;
+    }
+    .form-group {
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.875rem;
+      font-weight: 600;
+      margin-bottom: 6px;
+      color: #334155;
+    }
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+  </style>
+</head>
+<body>
+
+<nav class="navbar">
+  <div class="nav-brand">
+    <a href="../index.html" style="text-decoration:none;color:inherit;display:flex;align-items:center;gap:8px">
+      <span class="brand-drop">🩸</span><span class="brand-name">RaktSetu</span>
+    </a>
+  </div>
+  <ul class="nav-links">
+    <li><a href="../index.html">Dashboard</a></li>
+    <li><a href="bloodbank.html">Blood Banks</a></li>
+    <li><a href="donors.html" class="active">Donors</a></li>
+    <li><a href="emergency.html">Emergency</a></li>
+    <li><a href="leaderboard.html">LifeSaver Board</a></li>
+  </ul>
+  <div class="nav-emergency"><a href="emergency.html" class="btn-emergency">🚨 Emergency Request</a></div>
+</nav>
+
+<div class="page-header">
+  <h1>Volunteer Donor Registry</h1>
+  <p>Register as a donor. When emergencies strike nearby, you'll receive an SMS or WhatsApp alert.</p>
+</div>
+
+<div class="section">
+  <div class="register-layout">
+    <div class="register-form-card">
+      <h2>Register as a Donor</h2>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label>Full Name</label>
+          <input type="text" id="dName" class="form-input" placeholder="Your full name"/>
+        </div>
+        <div class="form-group">
+          <label>Blood Group</label>
+          <select id="dGroup" class="form-input">
+            <option value="">Select Group</option>
+            <option value="A+">A+</option><option value="A-">A-</option>
+            <option value="B+">B+</option><option value="B-">B-</option>
+            <option value="AB+">AB+</option><option value="AB-">AB-</option>
+            <option value="O+">O+</option><option value="O-">O- (Universal)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Phone Number</label>
+          <input type="tel" id="dPhone" class="form-input" placeholder="+91-XXXXXXXXXX"/>
+        </div>
+        <div class="form-group">
+          <label>City</label>
+          <input type="text" id="dCity" class="form-input" placeholder="Your city"/>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label>Last Donation Date (Leave blank if first time)</label>
+        <input type="date" id="dLastDonated" class="form-input"/>
+      </div>
+
+      <div class="form-group" style="margin-top: 20px; margin-bottom: 24px;">
+        <label style="display:flex;align-items:flex-start;gap:10px;cursor:pointer;font-weight:500;font-size:0.9rem;color:#475569;">
+          <input type="checkbox" id="dConsent" style="width:18px;height:18px;margin-top:2px;cursor:pointer;accent-color:var(--primary);"/>
+          I consent to receive urgent system alerts over SMS/WhatsApp whenever my matching blood type is flagged for a life-critical emergency locally.
+        </label>
+      </div>
+
+      <button class="btn-submit-emergency" style="width:100%;" onclick="registerDonor()">🩸 Register as Donor</button>
+    </div>
+
+    <div class="donor-info-panel">
+      <h3>💡 Why Register?</h3>
+      <ul class="info-list">
+        <li>🚨 Get instant alerts when your blood type is critically needed nearby</li>
+        <li>🛡️ 90-day safety guard — you won't be alerted during recovery period</li>
+        <li>🏆 Earn LifeSaver points and digital certificates for every donation</li>
+        <li>🗺️ Only contacted when within reachable distance from the patient</li>
+        <li>🔒 Your data stays private — only used for emergency matching</li>
+      </ul>
+      <div class="guard-explainer">
+        <h4>⏳ 90-Day Safety Guard</h4>
+        <p>After each donation, your profile is automatically locked for 90 days. You won't receive any alerts during this period — protecting your health.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="section" style="margin-top: 40px;">
+  <div class="section-header">
+    <h2>Registered Grid Roster</h2>
+    <div style="display:flex;gap:10px">
+      <select id="donorGroupFilter" onchange="renderDonors()" class="form-input" style="max-width:130px">
+        <option value="">All Groups</option>
+        <option value="A+">A+</option><option value="A-">A-</option>
+        <option value="B+">B+</option><option value="B-">B-</option>
+        <option value="AB+">AB+</option><option value="AB-">AB-</option>
+        <option value="O+">O+</option><option value="O-">O-</option>
+      </select>
+      <select id="donorEligibleFilter" onchange="renderDonors()" class="form-input" style="max-width:150px">
+        <option value="">All Status</option>
+        <option value="eligible">Eligible Now</option>
+        <option value="cooldown">In Cooldown</option>
+      </select>
+    </div>
+  </div>
+  <div id="donorList" class="donor-cards-grid"></div>
+</div>
+
+<footer class="footer"><p>🩸 RaktSetu — Every donor is a lifesaver.</p></footer>
+
+<script>
+  if (typeof DONORS === 'undefined') {
+    var DONORS = [
+      { id: 1, name: "Arjun Mehta", bloodGroup: "O-", city: "Hyderabad", phone: "+91-9876543210", lastDonated: "2026-05-15", available: true },
+      { id: 2, name: "Dr. Priya Sharma", bloodGroup: "B+", city: "Secunderabad", phone: "+91-8765432109", lastDonated: "2026-02-10", available: true }
+    ];
+    var isDonorEligible = function(donor) {
+      return daysSince(donor.lastDonated) >= 90;
+    };
+    var daysSince = function(dateStr) {
+      const past = new Date(dateStr);
+      const today = new Date();
+      const diffTime = Math.abs(today - past);
+      return Math.floor(diffTime / (1000 * 60 * 60 * 24));
+    };
+  }
+</script>
+<script src="../js/data.js"></script>
+
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  // Prevent selecting future dates for donation entries
+  document.getElementById('dLastDonated').max = new Date().toISOString().split("T")[0];
+  renderDonors();
+});
+
+function showToast(message) {
+  const toast = document.createElement('div');
+  toast.className = 'notification-toast';
+  toast.innerText = message;
+  document.body.appendChild(toast);
+  setTimeout(() => toast.remove(), 4000);
+}
+
+function renderDonors() {
+  const group = document.getElementById('donorGroupFilter').value;
+  const eligFilter = document.getElementById('donorEligibleFilter').value;
+
+  let donors = [...DONORS];
+  if (group) donors = donors.filter(d => d.bloodGroup === group);
+  if (eligFilter === 'eligible') donors = donors.filter(d => isDonorEligible(d));
+  if (eligFilter === 'cooldown') donors = donors.filter(d => !isDonorEligible(d));
+
+  const grid = document.getElementById('donorList');
+  
+  if (donors.length === 0) {
+    grid.innerHTML = `<div style="grid-column: 1/-1; text-align:center; padding:32px; color:var(--text-muted); font-style:italic;">No profile logs match the specified search query filters.</div>`;
+    return;
+  }
+
+  grid.innerHTML = donors.map(d => {
+    const eligible = isDonorEligible(d);
+    const days = daysSince(d.lastDonated);
+    const cooldownLeft = Math.max(0, 90 - days);
+    
+    return `
+    <div class="donor-card ${eligible ? 'eligible' : 'cooldown'}">
+      <div class="donor-avatar">${d.bloodGroup}</div>
+      <div class="donor-details">
+        <strong>${d.name}</strong>
+        <span class="donor-city">📍 ${d.city}</span>
+        <span class="donor-phone">📞 ${d.phone}</span>
+        <span class="last-donated">Last donation: ${d.lastDonated === '2020-01-01' ? 'None recorded' : d.lastDonated}</span>
+      </div>
+      <div class="donor-status">
+        ${eligible
+          ? `<span class="status-pill green">✅ Eligible</span>`
+          : `<span class="status-pill orange">⏳ Cooldown (${cooldownLeft}d left)</span>`
+        }
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function registerDonor() {
+  const name = document.getElementById('dName').value.trim();
+  const group = document.getElementById('dGroup').value;
+  const phone = document.getElementById('dPhone').value.trim();
+  const city = document.getElementById('dCity').value.trim();
+  const consent = document.getElementById('dConsent').checked;
+
+  if (!name || !group || !phone || !city) { 
+    showToast('⚠️ Please provide all missing details.'); 
+    return; 
+  }
+  if (!consent) { 
+    showToast('⚠️ Alerts permission authorization required.'); 
+    return; 
+  }
+
+  // Fallback to older default placeholder string if input date value left empty 
+  const lastDonated = document.getElementById('dLastDonated').value || '2020-01-01';
+  
+  DONORS.push({
+    id: DONORS.length + 1, 
+    name, 
+    bloodGroup: group, 
+    city,
+    lat: 13.6288 + (Math.random()-0.5)*0.05,
+    lng: 79.4192 + (Math.random()-0.5)*0.05,
+    phone, 
+    lastDonated, 
+    available: true
+  });
+
+  showToast(`✅ Welcome, ${name}! Your profile is now live.`);
+  renderDonors();
+  
+  // Clean Form
+  document.getElementById('dName').value='';
+  document.getElementById('dGroup').value='';
+  document.getElementById('dPhone').value='';
+  document.getElementById('dCity').value='';
+  document.getElementById('dLastDonated').value='';
+  document.getElementById('dConsent').checked=false;
+}
+</script>
+</body>
+</html>

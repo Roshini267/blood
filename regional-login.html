@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Regional Depot Login – RaktSetu</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"/>
+  
+  <style>
+    :root {
+      --primary-maroon: #8a1527;
+      --primary-dark: #660f1c;
+      --accent-red: #ef4444;
+      --bg-light: #f8fafc;
+      --text-dark: #1e293b;
+      --text-muted: #64748b;
+      --border-color: #e2e8f0;
+      --radius-md: 8px;
+      --radius-lg: 12px;
+      --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Inter', sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-light);
+      color: var(--text-dark);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* --- INSTUTIONAL TOP HEADER --- */
+    .gov-header {
+      background: #ffffff;
+      padding: 12px 5%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid var(--border-color);
+      width: 100%;
+    }
+
+    .gov-branding {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .brand-divider {
+      width: 1px;
+      height: 35px;
+      background: var(--border-color);
+    }
+
+    .raktsetu-identity {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      text-decoration: none;
+      color: var(--primary-maroon);
+    }
+
+    .raktsetu-identity .logo-icon { font-size: 1.8rem; }
+    .raktsetu-identity .logo-text {
+      font-family: 'Space Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: 1.5rem;
+      letter-spacing: -0.5px;
+    }
+
+    .btn-back {
+      color: var(--text-dark);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: color 0.2s;
+    }
+
+    .btn-back:hover {
+      color: var(--primary-maroon);
+    }
+
+    /* --- LOGIN LAYOUT CONTAINER --- */
+    .login-container {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+
+    .login-card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 450px;
+      padding: 40px;
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border-color);
+      box-shadow: var(--shadow);
+    }
+
+    .login-header {
+      text-align: center;
+      margin-bottom: 32px;
+    }
+
+    .login-header .icon-shield {
+      font-size: 2.5rem;
+      color: var(--primary-maroon);
+      margin-bottom: 12px;
+    }
+
+    .login-header h2 {
+      font-family: 'Space Grotesk', sans-serif;
+      color: var(--primary-maroon);
+      font-size: 1.6rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+
+    .login-header p {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+    }
+
+    /* --- FORM STYLING --- */
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-dark);
+      margin-bottom: 8px;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-md);
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .form-control:focus {
+      border-color: var(--primary-maroon);
+    }
+
+    .form-options {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 0.85rem;
+      margin-bottom: 24px;
+    }
+
+    .remember-me {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .forgot-link {
+      color: var(--primary-maroon);
+      text-decoration: none;
+      font-weight: 500;
+    }
+
+    .forgot-link:hover {
+      text-decoration: underline;
+    }
+
+    .btn-login {
+      width: 100%;
+      background: var(--primary-maroon);
+      color: #ffffff;
+      border: none;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: 600;
+      border-radius: var(--radius-md);
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+
+    .btn-login:hover {
+      background: var(--primary-dark);
+    }
+
+    .error-msg {
+      background: #fef2f2;
+      color: var(--accent-red);
+      padding: 12px;
+      border-radius: var(--radius-md);
+      font-size: 0.85rem;
+      margin-bottom: 20px;
+      border: 1px solid #fee2e2;
+      display: none;
+      text-align: center;
+    }
+
+    .footer {
+      background: #1e293b;
+      color: #94a3b8;
+      text-align: center;
+      padding: 24px;
+      font-size: 0.85rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="gov-header">
+    <div class="gov-branding">
+      <div style="font-size: 0.75rem; font-weight: 700; line-height: 1.2; color:#334155;">MINISTRY OF<br>HEALTH AND FAMILY WELFARE</div>
+      <div class="brand-divider"></div>
+      <a href="../index.html" class="raktsetu-identity">
+        <span class="logo-icon">🩸</span>
+        <span class="logo-text">RaktSetu</span>
+      </a>
+    </div>
+    <a href="../index.html" class="btn-back">← Back to Dashboard</a>
+  </div>
+
+  <div class="login-container">
+    <div class="login-card">
+      <div class="login-header">
+        <div class="icon-shield">🏢</div>
+        <h2>Regional Depot Login</h2>
+        <p>Authorized access portal for verified hospital storage nodes and logistical bases.</p>
+      </div>
+
+      <div class="error-msg" id="loginError">Invalid credentials. Please verify your depot credentials.</div>
+
+      <form id="depotLoginForm" onsubmit="handleDepotLogin(event)">
+        <div class="form-group">
+          <label for="depotId">Regional Depot ID</label>
+          <input type="text" id="depotId" class="form-control" placeholder="e.g., DEPOT-AP-79" required />
+        </div>
+
+        <div class="form-group">
+          <label for="depotPassword">Security Access Key / Password</label>
+          <input type="password" id="depotPassword" class="form-control" placeholder="••••••••" required />
+        </div>
+
+        <div class="form-options">
+          <label class="remember-me">
+            <input type="checkbox" /> Remember Node Session
+          </label>
+          <a href="#" class="forgot-link" onclick="alert('Please contact your district healthcare administration system supervisor.')">Forgot Key?</a>
+        </div>
+
+        <button type="submit" class="btn-login">Verify & Authorize Entry</button>
+      </form>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <p>🩸 RaktSetu Infrastructure Security System Layer</p>
+  </footer>
+
+  <script>
+    // --- LOGIN VALIDATION ENGINE ---
+    function handleDepotLogin(event) {
+      event.preventDefault();
+      
+      const idInput = document.getElementById('depotId').value.trim();
+      const passInput = document.getElementById('depotPassword').value;
+      const errorBox = document.getElementById('loginError');
+
+      // Demo validation credentials check
+      if (idInput === "admin" && passInput === "admin") {
+        errorBox.style.display = "none";
+        alert("Authorization Granted! Routing payload to internal telemetry grid node dashboard...");
+        window.location.href = "../index.html"; // Returns to home page upon success
+      } else {
+        errorBox.style.display = "block";
+      }
+    }
+  </script>
+</body>
+</html>
