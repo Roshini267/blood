@@ -253,3 +253,143 @@ button, .btn-search, .btn-add, .btn-assign, .btn-track {
   @media (max-width: 768px) {
   /* All your mobile-specific CSS rules will go right here */
 }
+/* ==========================================================================
+   MANUAL MOBILE TELEMETRY VIEW OVERRIDES (BREAKPOINT: 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  
+  /* --- TOP INSTITUTIONAL & NAV HEADERS --- */
+  .gov-header {
+    flex-direction: column !important;
+    gap: 12px !important;
+    text-align: center !important;
+    padding: 16px 5% !important;
+  }
+  
+  .gov-branding {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  
+  .brand-divider {
+    display: none !important; /* Removes vertical bar on tight viewports */
+  }
+
+  .navbar {
+    flex-direction: column !important;
+    padding: 12px 5% !important;
+  }
+
+  .nav-links {
+    flex-direction: column !important;
+    width: 100% !important;
+    text-align: center !important;
+    gap: 0 !important;
+  }
+
+  .nav-item {
+    width: 100% !important;
+  }
+
+  .nav-link {
+    padding: 12px 20px !important;
+    justify-content: center !important;
+    border-bottom: 1px solid var(--primary-dark) !important;
+  }
+
+  /* Make dropdown panels slide down inline instead of floating over elements */
+  .dropdown-menu {
+    position: relative !important;
+    top: 0 !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    display: none !important; /* Toggle via hover/click safely */
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+    background-color: var(--primary-dark) !important;
+  }
+
+  .nav-item:hover .dropdown-menu {
+    display: block !important;
+  }
+
+  .dropdown-item {
+    color: #ffffff !important;
+    text-align: center !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  }
+  
+  .dropdown-item:hover {
+    padding-left: 20px !important;
+    background-color: var(--primary-maroon) !important;
+  }
+
+  .nav-emergency {
+    width: 100% !important;
+    padding-top: 12px !important;
+  }
+
+  .btn-emergency {
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+  }
+
+  /* --- SEARCH PATTERN MATRIX STACK --- */
+  .hero-search {
+    flex-direction: column !important;
+    padding: 16px !important;
+    gap: 12px !important;
+  }
+
+  .hero-select, 
+  .hero-input, 
+  .btn-mic, 
+  .btn-search {
+    width: 100% !important; /* Stacks inputs edge-to-edge on mobile screens */
+  }
+
+  /* --- COMPONENT DENSITY ADJUSTMENTS --- */
+  .hero-title {
+    font-size: 1.8rem !important; /* Keeps headline scale highly legible */
+  }
+
+  .hero-stats {
+    grid-template-columns: 1fr !important; /* Shifts grid counts into a clean column list */
+    gap: 16px !important;
+  }
+
+  /* Vertical list transition for leaderboard podium cards */
+  .podium {
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 16px !important;
+  }
+
+  .podium-slot {
+    width: 100% !important;
+    height: auto !important; /* Overrides fixed desktop pixel block properties */
+    padding: 20px !important;
+  }
+  
+  .podium-slot.first,
+  .podium-slot.second,
+  .podium-slot.third {
+    order: initial !important; /* Restores natural sequential mobile stacking order */
+  }
+
+  /* Interactive Leaflet container height scale stabilization */
+  #mainMap, 
+  #leaderboardMap, 
+  #leaderboardClusterMap {
+    height: 300px !important; /* Prevents maps from taking up the entire screen view */
+  }
+
+  /* --- DATA SCARCITY MATRIX MOBILE OVERFLOW WRAP --- */
+  .table-wrap {
+    overflow-x: auto !important; /* Enables horizontal swipe gestures on compact screens */
+    -webkit-overflow-scrolling: touch;
+    width: 100% !important;
+  }
+}
