@@ -7,7 +7,7 @@
   
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet"/>
-  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <style>
     :root {
       --primary-maroon: #8a1527;
@@ -451,6 +451,9 @@
     .dot.red { background: var(--accent-red); }
     .dot.yellow { background: #eab308; }
     .dot.green { background: #22c55e; }
+    @media (max-width: 768px) {
+  /* All your mobile-specific CSS rules will go right here */
+}
   </style>
 </head>
 <body>

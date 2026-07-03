@@ -59,7 +59,29 @@ input, select, textarea { font-family: inherit; outline: none; }
 .btn-emergency { background: var(--red); color: var(--white); padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 700; white-space: nowrap; transition: background-color 0.2s ease, transform 0.1s ease; }
 .btn-emergency:hover { background: var(--red-dark); }
 .btn-emergency:active { transform: scale(0.98); }
+.navbar {
+    flex-direction: column; /* Stacks branding, links, and emergency button vertically */
+    padding: 15px;
+  }
 
+  .nav-links {
+    flex-direction: column; /* Stacks each navigation link button vertically */
+    width: 100%;
+    text-align: center;
+    margin: 10px 0;
+  }
+
+  .nav-item {
+    width: 100%;
+  }
+
+  /* Make dropdown menus take up full width safely on click or hover */
+  .dropdown-menu {
+    position: relative; /* Takes it out of absolute positioning so it doesn't float over text */
+    top: 0;
+    width: 100%;
+    box-shadow: none;
+  }
 /* ── Hero Section ──────────────────────────────────────────── */
 .hero {
   background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #311042 100%);
@@ -188,4 +210,46 @@ button, .btn-search, .btn-add, .btn-assign, .btn-track {
   .podium-slot { width: 100%; max-width: 320px; }
   .podium-slot.first { transform: none; }
   .transit-card { flex-direction: column; gap: 20px; }
+}
+/* Forces stat boxes to stack vertically instead of hiding or overflowing */
+  .hero-stats {
+    grid-template-columns: 1fr !important; 
+    gap: 16px;
+  }
+
+  /* Changes Search/Select filters from row into column layout */
+  .hero-search {
+    flex-direction: column;
+    gap: 10px;
+    padding: 16px;
+  }
+
+  .hero-select, .hero-input, .btn-mic, .btn-search {
+    width: 100% !important; /* Forces inputs to take full screen width */
+  }
+
+  /* Stacks the 1st, 2nd, and 3rd place leader podiums sequentially */
+  .podium-box {
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .podium-slot {
+    width: 100% !important;
+    height: auto !important; /* Removes desktop static height limitations */
+  }
+  .hero-title {
+    font-size: 1.8rem !important; /* Keeps headline readable on smaller screens */
+  }
+
+  .hero-sub {
+    font-size: 0.95rem !important;
+  }
+
+  #mainMap, #leaderboardClusterMap {
+    height: 300px !important; /* Reduces map block heights so user can scroll past easily */
+  }
+  @media (max-width: 768px) {
+  /* All your mobile-specific CSS rules will go right here */
 }
