@@ -239,4 +239,105 @@ button, .btn-search, .btn-add, .btn-assign, .btn-track {
     width: 100% !important;
     height: auto !important; /* Removes desktop static height limitations */
   }
+/* ==========================================================================
+   MANUAL MOBILE VIEW OPTIMIZATION OVERRIDES (Breakpoint: 968px)
+   ========================================================================== */
+@media screen and (max-width: 968px) {
+  /* Stack the Government Branding strip vertically */
+  .gov-header {
+    flex-direction: column !important;
+    gap: 12px !important;
+    text-align: center !important;
+    padding: 16px 5% !important;
+  }
   
+  .gov-branding {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+  
+  .brand-divider {
+    display: none !important; /* Hides the vertical line on mobile screens */
+  }
+
+  /* Make the Maroon Navigation Bar wrap links cleanly into vertical blocks */
+  .navbar {
+    flex-direction: column !important;
+    padding: 12px 5% !important;
+    gap: 12px !important;
+  }
+
+  .nav-links {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 4px !important;
+    text-align: center !important;
+  }
+
+  .nav-item {
+    width: 100% !important;
+  }
+
+  .nav-link {
+    padding: 12px 20px !important;
+    justify-content: center !important;
+    background-color: rgba(212, 163, 115, 0.05) !important;
+    border-radius: var(--radius-md) !important;
+  }
+
+  /* Transform floating hover dropdowns into clean, selectable mobile accordion blocks */
+  .dropdown-menu {
+    position: relative !important;
+    top: 0 !important;
+    width: 100% !important;
+    box-shadow: none !important;
+    border-top: none !important;
+    background-color: var(--primary-dark) !important;
+    display: none !important; /* Toggled gracefully on hover/click */
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: none !important;
+  }
+
+  .nav-item:hover .dropdown-menu {
+    display: block !important;
+  }
+
+  .dropdown-item {
+    color: #ffffff !important;
+    text-align: center !important;
+    padding: 12px !important;
+  }
+
+  .nav-emergency {
+    width: 100% !important;
+  }
+
+  .btn-emergency {
+    display: block !important;
+    width: 100% !important;
+    text-align: center !important;
+    padding: 14px !important;
+  }
+
+  /* --- DATA GRID COMPRESSION --- */
+  .hero-search {
+    flex-direction: column !important;
+    padding: 16px !important;
+    gap: 12px !important;
+  }
+
+  .hero-select, .hero-input, .btn-mic, .btn-search {
+    width: 100% !important; /* Stacks selection tools on smartphone displays */
+  }
+
+  .hero-stats {
+    grid-template-columns: 1fr !important; /* Stacks units overview info vertically */
+    gap: 16px !important;
+  }
+
+  .table-wrap {
+    overflow-x: auto !important; /* Enables swipe gestures for dense data log sheets */
+    -webkit-overflow-scrolling: touch;
+  }
+}  
